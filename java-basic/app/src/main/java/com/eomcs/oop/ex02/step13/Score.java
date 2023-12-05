@@ -3,7 +3,6 @@ package com.eomcs.oop.ex02.step13;
 // ## 사용자 정의 데이터 타입 만들기
 // - 특정 유형의 데이터를 담을 전용 메모리(변수)를 설계한다.
 // - 학생 데이터를 묶음으로 다룰 수 있도록 변수 그룹을 정의한다.
-//
 public class Score {
 
   // 인스턴스 변수(instance variable; instance field)
