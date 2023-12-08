@@ -11,7 +11,7 @@ public class Exam0162 {
     // - 여러 인스턴스에서 공통으로 사용할 값을 담는 변수라면 static 필드로 선언하라!
     // - 조회용으로 사용할 변수이면서 외부에서도 사용해야 할 변수라면 public 으로 공개하라!
     // - 다음 변수는 클래스 변수(스태틱 변수)의 전형적인 예이다.
-    public static final int GUEST = 0;
+    static final int GUEST = 0;
     public static final int MEMBER = 1;
     public static final int MANAGER = 2;
 
@@ -24,9 +24,9 @@ public class Exam0162 {
 
     // Member와 관련된 상수라면
     // Member 클래스에 선언하는 것이 유지보수에 더 낫다.
-    //    final int GUEST = 0;
-    //    final int MEMBER = 1;
-    //    final int MANAGER = 2;
+    // final int GUEST = 0;
+    // final int MEMBER = 1;
+    // final int MANAGER = 2;
 
     Member m4 = new Member();
     m4.id = "aaa";
@@ -45,11 +45,5 @@ public class Exam0162 {
     m6.type = Member.MEMBER;
   }
 }
-
-
-
-
-
-
 
 
