@@ -3,16 +3,26 @@ package bitcamp.myapp.menu;
 import bitcamp.myapp.vo.Board;
 import bitcamp.util.Prompt;
 
-public class BoardMenu {
+public class BoardMenu implements Menu {
 
+  // 의존 객체(Dependency Object ==> dependency);
+  // - 클래스가 작업을 수행할 때 사용하는 객체
   Prompt prompt;
+
   String title;
   Board[] boards = new Board[3];
   int length = 0;
 
+  // BoardMenu 인스턴스를 생성할 때 반드시 게시판 제목을 설정하도록 강요한다.
+  // 생성자란(constructor)?
+  // => 인스턴스를 사용하기 전에 유효한 상태로 설정하는 작업을 수행하는 메서드
   public BoardMenu(String title, Prompt prompt) {
     this.title = title;
     this.prompt = prompt;
+  }
+
+  public String getTitle() {
+    return null;
   }
 
   void printMenu() {
@@ -25,7 +35,7 @@ public class BoardMenu {
     System.out.println("0. 이전");
   }
 
-  void execute() {
+  public void execute(Prompt prompt) {
     this.printMenu();
     while (true) {
       String input = this.prompt.input("메인/%s> ", this.title);
@@ -81,7 +91,7 @@ public class BoardMenu {
     this.boards[this.length++] = board;
   }
 
-  void list() {
+  void list() { // 논스태틱 메서드 == 인스턴스 메서드
     System.out.println("게시글 목록:");
     System.out.printf("%-20s\t%10s\t%s\n", "Title", "Writer", "Date");
 

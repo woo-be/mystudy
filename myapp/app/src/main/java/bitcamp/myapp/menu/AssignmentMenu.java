@@ -3,9 +3,12 @@ package bitcamp.myapp.menu;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
 
-public class AssignmentMenu {
+public class AssignmentMenu implements Menu {
 
+  // 의존 객체(Dependency Object ==> dependency);
+  // - 클래스가 작업을 수행할 때 사용하는 객체
   Prompt prompt;
+
   String title;
   Assignment[] assignments = new Assignment[3];
   int length = 0;
@@ -13,6 +16,10 @@ public class AssignmentMenu {
   public AssignmentMenu(String title, Prompt prompt) {
     this.title = title;
     this.prompt = prompt;
+  }
+
+  public String getTitle() {
+    return null;
   }
 
   void printMenu() {
@@ -25,7 +32,7 @@ public class AssignmentMenu {
     System.out.println("0. 이전");
   }
 
-  void execute() {
+  public void execute(Prompt prompt) {
     this.printMenu();
 
     while (true) {

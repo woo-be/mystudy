@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Prompt {
 
-  Scanner keyIn;// new Scanner(System.in);
+  Scanner keyIn;
 
   public Prompt(InputStream in) {
     keyIn = new Scanner(in);
@@ -13,7 +13,7 @@ public class Prompt {
 
   public String input(String title, Object... args) {
     System.out.print(String.format(title, args));
-    return keyIn.nextLine();
+    return this.keyIn.nextLine();
   }
 
   public int inputInt(String title, Object... args) {
@@ -26,12 +26,12 @@ public class Prompt {
     return Float.parseFloat(str);
   }
 
-  public Boolean inputBoolean(String title, Object... args) {
+  public boolean inputBoolean(String title, Object... args) {
     String str = this.input(title, args);
     return Boolean.parseBoolean(str);
   }
 
   public void close() {
-    keyIn.close();
+    this.keyIn.close();
   }
 }
