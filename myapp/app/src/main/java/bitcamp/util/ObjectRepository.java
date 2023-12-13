@@ -1,57 +1,75 @@
 package bitcamp.util;
 
-public class ObjectRepository {
+import java.util.Arrays;
 
-  private Object[] objects = new Object[3];
-  private int length = 0;
+public class ObjectRepository<E> {
 
-  public void add(Object object) {
+  Object[] objects = new Object[3];
+  int length = 0;
+
+  public void add(E object) {
+
     if (this.length == this.objects.length) {
+      //System.out.println("과제를 더이상 등록할 수 없습니다.");
       int oldSize = this.objects.length;
-      int newSize = oldSize + (oldSize >> 1);
+      int newSize = oldSize + (oldSize / 2);
 
-      Object[] arr = new Object[newSize];
-      for (int i = 0; i < oldSize; i++) {
-        arr[i] = this.objects[i];
-      }
+      // 이전 배열에 들어 있는 값을 새 배열에 복사
+//      Object[] arr = new Object[newSize];
+//      for (int i = 0; i < oldSize; i++) {
+//        arr[i] = this.objects[i];
+//      }
 
-      this.objects = arr;
+      // 새 배열을 가리키도록 배열 레퍼런스를 변경
+
+//      Object[] arr = new Object[newSize];
+//      System.arraycopy(this.objects, 0, arr, 0, this.objects.length);
+//      this.objects = arr;
+
+      this.objects = Arrays.copyOf(this.objects, newSize);
+
     }
-
     this.objects[this.length++] = object;
   }
 
-  public Object remove(int index) {
-    if (index < 0 || index >= this.length) {
+  public E remove(int index) {
+    if (index < 0 || index > this.length) {
       return null;
     }
 
     Object deleted = this.objects[index];
 
-    for (int i = index; i < (this.length - 1); i++) {
-      this.objects[i] = this.objects[i + 1];
-    }
+//    for (int i = index; i < (this.length - 1); i++) {
+//      this.objects[i] = this.objects[i
+//          + 1]; // 다음 레퍼런스의 값을 삭제하려는 현재 레퍼런스로 이동
+//    }
+
+    System.arraycopy(this.objects, index + 1, this.objects, index, this.length - (index + 1));
+
     this.objects[--this.length] = null;
 
-    return deleted;
+    return (E) deleted;
   }
 
   public Object[] toArray() {
-    Object[] arr = new Object[this.length];
-    for (int i = 0; i < this.length; i++) {
-      arr[i] = this.objects[i];
-    }
-    return arr;
+//    Object[] arr = new Object[this.length];
+//    for (int i = 0; i < this.length; i++) {
+//      arr[i] = this.objects[i];
+//    }
+//    return (E[]) arr;
+
+    return Arrays.copyOf(this.objects, this.length);
   }
 
-  public Object get(int index) {
+  public E get(int index) {
     if (index < 0 || index >= this.length) {
       return null;
     }
-    return this.objects[index];
+
+    return (E) this.objects[index];
   }
 
-  public Object set(int index, Object object) {
+  public E set(int index, Object object) {
     if (index < 0 || index >= this.length) {
       return null;
     }
@@ -59,6 +77,6 @@ public class ObjectRepository {
     Object old = this.objects[index];
     this.objects[index] = object;
 
-    return old;
+    return (E) old;
   }
 }
