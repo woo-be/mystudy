@@ -5,8 +5,13 @@ public class Main {
     java.util.Scanner keyIn = new java.util.Scanner(System.in);
     int a = keyIn.nextInt();
     int b = keyIn.nextInt();
-    System.out.print(a - b);
+    int c = keyIn.nextInt();
+    System.out.println((a + b) % c);
+    System.out.println(((a % c) + (b % c)) % c);
+    System.out.println((a * b) % c);
+    System.out.println(((a % c) * (b % c)) % c);
     keyIn.close();
   }
 }
+
 
