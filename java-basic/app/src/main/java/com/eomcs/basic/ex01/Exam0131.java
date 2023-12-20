@@ -53,13 +53,11 @@ public class Exam0131 {
           && Objects.equals(name, other.name) && Objects.equals(tel, other.tel)
           && working == other.working;
     }
+
+
+
   }
 
 }
-
-
-
-
-
 
 
