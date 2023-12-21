@@ -43,6 +43,8 @@ public class Exam0151 {
 
     System.out.println(s1 == s2);
 
+    System.out.println(s1.equals(s2));
+
     System.out.println(s1.hashCode());
     System.out.println(s2.hashCode());
     System.out.println(s3.hashCode());
@@ -60,8 +62,7 @@ public class Exam0151 {
     Object[] list = set.toArray();
     for (Object obj : list) {
       Student student = (Student) obj;
-      System.out.printf("%s, %d, %s\n",
-          student.name, student.age, student.working ? "재직중" : "실업중");
+      System.out.printf("%s, %d, %s\n", student.name, student.age, student.working ? "재직중" : "실업중");
     }
 
     // 인스턴스가 다르더라도 인스턴스의 필드 값이 같을 경우
@@ -73,10 +74,5 @@ public class Exam0151 {
   }
 
 }
-
-
-
-
-
 
 
