@@ -5,7 +5,7 @@ public class Exam0232 {
   public static void main(String[] args) {
     // wrapper 객체에 대해 == 연산자를 사용할 때 주의할 점!
 
-    // -128 ~ 127 범위의 값으로 Integer 객체를 만들 때는 
+    // -128 ~ 127 범위의 값으로 Integer 객체를 만들 때는
     // 내부적으로 한 개의 인스턴스만 생성한다.
     // 그래서 값을 비교할 때 그냥 인스턴스를 비교해도 된다.
     Integer obj1 = 100;
@@ -19,8 +19,6 @@ public class Exam0232 {
     System.out.println(obj3 == obj4); // false
 
     // 결론!
-    // String이나 Wrapper 인스턴스의 값을 비교할 때는 무조건 equals()를 사용하라! 
+    // String이나 Wrapper 인스턴스의 값을 비교할 때는 무조건 equals()를 사용하라!
   }
 }
-
-

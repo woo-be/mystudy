@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class AssignmentDeleteHandler extends AbstractMenuHandler {
 
-  ArrayList<Assignment> objectRepository;
+  private ArrayList<Assignment> objectRepository;
 
   public AssignmentDeleteHandler(ArrayList<Assignment> objectRepository, Prompt prompt) {
     super(prompt);
@@ -16,10 +16,12 @@ public class AssignmentDeleteHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() {
+    try {
+      int index = this.prompt.inputInt("번호? ");
+      this.objectRepository.remove(index);
 
-    int index = this.prompt.inputInt("번호? ");
-    if (this.objectRepository.remove(index) == null) {
-      System.out.println("과제 번호가 유효하지 않습니다.");
+    } catch (Exception e) {
+      System.out.println("삭제 오류!");
     }
   }
 }

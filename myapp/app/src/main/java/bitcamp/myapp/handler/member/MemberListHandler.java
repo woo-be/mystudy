@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class MemberListHandler extends AbstractMenuHandler {
 
-  ArrayList<Member> objectRepository;
+  private ArrayList<Member> objectRepository;
 
   public MemberListHandler(ArrayList<Member> objectRepository, Prompt prompt) {
     super(prompt);
@@ -16,14 +16,13 @@ public class MemberListHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() {
-
     System.out.printf("%-10s\t%30s\t%s\n", "이름", "이메일", "가입일");
 
     Member[] members = new Member[this.objectRepository.size()];
     this.objectRepository.toArray(members);
 
     for (Member member : members) {
-      System.out.printf("%-10s\t%30s\t%s\n", member.getName(), member.getEmail(),
+      System.out.printf("%-10s\t%30s\t%3$tY-%3$tm-%3$td\n", member.getName(), member.getEmail(),
           member.getCreatedDate());
     }
   }

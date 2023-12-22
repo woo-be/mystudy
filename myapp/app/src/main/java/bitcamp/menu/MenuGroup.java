@@ -6,8 +6,8 @@ import bitcamp.util.Prompt;
 // - 다른 Menu 객체를 포함한다.
 public class MenuGroup extends AbstractMenu {
 
-  Menu[] menus = new Menu[10];
-  int menuSize;
+  private Menu[] menus = new Menu[10];
+  private int menuSize;
 
   public MenuGroup(String title) {
     super(title);
@@ -18,7 +18,7 @@ public class MenuGroup extends AbstractMenu {
     this.printMenu();
 
     while (true) {
-      String input = prompt.input("%s> ", this.title);
+      String input = prompt.input("%s> ", this.getTitle());
 
       if (input.equals("menu")) {
         this.printMenu();
@@ -26,19 +26,22 @@ public class MenuGroup extends AbstractMenu {
       } else if (input.equals("0")) {
         break;
       }
+      try {
+        int menuNo = Integer.parseInt(input);
+        if (menuNo < 1 || menuNo > this.menuSize) {
+          System.out.println("메뉴 번호가 옳지 않습니다.");
+          continue;
+        }
 
-      int menuNo = Integer.parseInt(input);
-      if (menuNo < 1 || menuNo > this.menuSize) {
-        System.out.println("메뉴 번호가 옳지 않습니다.");
-        continue;
+        this.menus[menuNo - 1].execute(prompt);
+      } catch (Exception e) {
+        System.out.println("메뉴가 옳지 않습니다!");
       }
-
-      this.menus[menuNo - 1].execute(prompt);
     }
   }
 
   private void printMenu() {
-    System.out.printf("[%s]\n", this.title);
+    System.out.printf("[%s]\n", this.getTitle());
 
     for (int i = 0; i < this.menuSize; i++) {
       System.out.printf("%d. %s\n", (i + 1), menus[i].getTitle());

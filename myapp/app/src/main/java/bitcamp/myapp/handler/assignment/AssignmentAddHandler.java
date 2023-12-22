@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class AssignmentAddHandler extends AbstractMenuHandler {
 
-  ArrayList<Assignment> objectRepository;
+  private ArrayList<Assignment> objectRepository;
 
 
   public AssignmentAddHandler(ArrayList<Assignment> objectRepository, Prompt prompt) {
@@ -18,11 +18,17 @@ public class AssignmentAddHandler extends AbstractMenuHandler {
   @Override
   protected void action() {
 
-    Assignment assignment = new Assignment();
-    assignment.setTitle(this.prompt.input("과제명? "));
-    assignment.setContent(this.prompt.input("내용? "));
-    assignment.setDeadline(this.prompt.input("제출 마감일? "));
+    try {
+      Assignment assignment = new Assignment();
+      assignment.setTitle(this.prompt.input("과제명? "));
+      assignment.setContent(this.prompt.input("내용? "));
+      assignment.setDeadline(this.prompt.inputDate("제출 마감일?(예: 2023-12-25) "));
 
-    this.objectRepository.add(assignment);
+      this.objectRepository.add(assignment);
+
+    } catch (Exception e) {
+      System.out.println("과제 입력 중 오류 발생!");
+      System.out.println("다시 시도하시기 바랍니다.");
+    }
   }
 }

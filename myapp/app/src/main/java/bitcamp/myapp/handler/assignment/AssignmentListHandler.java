@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class AssignmentListHandler extends AbstractMenuHandler {
 
-  ArrayList<Assignment> objectRepository;
+  private ArrayList<Assignment> objectRepository;
 
   public AssignmentListHandler(ArrayList<Assignment> objectRepository, Prompt prompt) {
     super(prompt);

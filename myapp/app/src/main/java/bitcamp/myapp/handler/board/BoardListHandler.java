@@ -10,7 +10,7 @@ import java.util.ArrayList;
 //
 public class BoardListHandler extends AbstractMenuHandler {
 
-  ArrayList<Board> objectRepository;
+  private ArrayList<Board> objectRepository;
 
   public BoardListHandler(ArrayList<Board> objectRepository, Prompt prompt) {
     super(prompt);
@@ -19,11 +19,12 @@ public class BoardListHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() {
+    System.out.printf("%-20s\t%10s\t%s\n", "Title", "Writer", "Date");
 
     Board[] boards = this.objectRepository.toArray(new Board[0]);
 
     for (Board board : boards) {
-      System.out.printf("%-20s\t%10s\t%s\n",
+      System.out.printf("%-20s\t%10s\t%3$tY-%3$tm-%3$td\n",
           board.getTitle(),
           board.getWriter(),
           board.getCreatedDate());

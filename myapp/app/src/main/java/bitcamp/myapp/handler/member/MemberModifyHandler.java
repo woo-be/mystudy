@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class MemberModifyHandler extends AbstractMenuHandler {
 
-  ArrayList<Member> objectRepository;
+  private ArrayList<Member> objectRepository;
 
   public MemberModifyHandler(ArrayList<Member> objectRepository, Prompt prompt) {
     super(prompt);
@@ -16,7 +16,6 @@ public class MemberModifyHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() {
-
     int index = this.prompt.inputInt("번호? ");
     Member old = this.objectRepository.get(index);
     if (old == null) {
@@ -28,7 +27,7 @@ public class MemberModifyHandler extends AbstractMenuHandler {
     member.setEmail(this.prompt.input("이메일(%s)? ", old.getEmail()));
     member.setName(this.prompt.input("이름(%s)? ", old.getName()));
     member.setPassword(this.prompt.input("새 암호? "));
-    member.setCreatedDate(this.prompt.input("가입일(%s)? ", old.getCreatedDate()));
+    member.setCreatedDate(old.getCreatedDate());
 
     this.objectRepository.set(index, member);
   }
