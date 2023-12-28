@@ -10,17 +10,16 @@ public class Test {
     list.add("ccc");
     list.add("ddd");
 
-    Object[] arr = list.toArray();
+    list.remove("ddd");
 
+    list.add(3, "xxx");
+
+    Object[] arr = list.toArray();
     for (Object value : arr) {
-      System.out.printf("%s, ", value);
+      System.out.println(value);
     }
 
     System.out.println();
 
-//    System.out.println(list.get(0));
-//    System.out.println(list.get(1));
-//    System.out.println(list.get(2));
-//    System.out.println(list.get(3));
   }
 }

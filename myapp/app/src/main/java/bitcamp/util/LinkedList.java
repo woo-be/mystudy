@@ -1,20 +1,18 @@
 package bitcamp.util;
 
-public class LinkedList<E> {
+public class LinkedList {
 
-  private Node<E> first;
-  private Node<E> last;
+  private Node first;
+  private Node last;
   private int size;
 
-  public int size() {
-    return size;
-  }
-
-  public void add(E value) {
-    Node<E> node = new Node<>();
+  public void add(Object value) {
+    Node node = new Node();
     node.value = value;
+
     if (first == null) {
       first = last = node;
+
     } else {
       last.next = node;
       last = node;
@@ -22,54 +20,52 @@ public class LinkedList<E> {
     size++;
   }
 
-  public Object[] toArray() {
-    Object[] arr = new Object[size];
-    int index = 0;
-    Node<E> node = first;
-    while (index < size) {
-      arr[index++] = node.value;
-      node = node.next;
-    }
+    public Object[] toArray() {
+      Object[] arr = new Object[size];
+      Node node = first;
+      int index = 0;
+      while (index < size) {
+        arr[index++] = node.value;
+        node = node.next;
+      }
     return arr;
   }
 
-  public E get(int index) {
+  public Object get(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
     int cursor = 0;
-    Node<E> node = first;
+    Node node = first;
     while (++cursor <= index) {
       node = node.next;
     }
     return node.value;
   }
 
-  public E set(int index, E value) {
+  public Object set(int index, Object value) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    E old = null;
-
+    Object old;
     int cursor = 0;
-    Node<E> node = first;
+    Node node = first;
     while (++cursor <= index) {
       node = node.next;
     }
     old = node.value;
     node.value = value;
-
     return old;
   }
 
-  public void add(int index, E value) {
+  public void add(int index, Object value) {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    Node<E> node = new Node();
+    Node node = new Node();
     node.value = value;
 
     if (first == null) {
@@ -85,8 +81,8 @@ public class LinkedList<E> {
 
     } else {
       int cursor = 0;
-      Node<E> currNode = first;
-      while (++cursor < index) {
+      Node currNode = first;
+      while (cursor++ < index) {
         currNode = currNode.next;
       }
       node.next = currNode.next;
@@ -95,43 +91,45 @@ public class LinkedList<E> {
     size++;
   }
 
-  public E remove(int index) {
-    if (index < 0 || index > size) {
+  public Object remove(int index) {
+    if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    E old = null;
+    Node deleted;
 
     if (size == 1) {
-      old = first.value;
+      deleted = first;
       first = last = null;
 
     } else if (index == 0) {
-      old = first.value;
+      deleted = first;
       first = first.next;
 
     } else {
       int cursor = 0;
-      Node<E> currNode = first;
+      Node node = first;
       while (++cursor < index) {
-        currNode = currNode.next;
+        node = node.next;
       }
-      old = currNode.next.value;
-      currNode.next = currNode.next.next;
-
+      deleted = node.next;
+      node.next = node.next.next;
       if (index == (size - 1)) {
-        last = currNode;
+        last = node;
       }
     }
 
+    Object old = deleted.value;
+    deleted.value = null;
+    deleted.next = null;
     size--;
     return old;
   }
 
-  public boolean remove(E value) {
+  public boolean remove(Object value) {
+
     Node prevNode = null;
     Node node = first;
-
     while (node != null) {
       if (node.value.equals(value)) {
         break;
@@ -146,21 +144,18 @@ public class LinkedList<E> {
 
     if (node == first) {
       first = first.next;
-      if (first == null) {
-        last = null;
-      }
-
     } else {
       prevNode.next = node.next;
+      if (node == last) {
+        last = prevNode;
+      }
     }
-
     size--;
     return true;
   }
 
-  public class Node<E> {
 
-    E value;
-    Node<E> next;
-  }
 }
+
+
+// add, toArray, get, set, add, remove, remove, toArray(arr)
