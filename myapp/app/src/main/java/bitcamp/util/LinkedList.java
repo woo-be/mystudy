@@ -1,71 +1,75 @@
 package bitcamp.util;
 
-public class LinkedList {
+import java.util.Arrays;
 
-  private Node first;
-  private Node last;
-  private int size;
+public class LinkedList<E> extends AbstractList<E> {
 
-  public void add(Object value) {
-    Node node = new Node();
+  private Node<E> first;
+  private Node<E> last;
+
+  public void add(E value) {
+    Node<E> node = new Node<>();
     node.value = value;
 
-    if (first == null) {
+    if (last == null) {
+      // 노드 객체가 없을 때,
       first = last = node;
-
     } else {
+      // 기존에 노드 객체가 있을 때,
+      // 마지막 노드의 다음 노드로 새로 만든 노드를 가리키게 한다.
       last.next = node;
       last = node;
     }
     size++;
   }
 
-    public Object[] toArray() {
-      Object[] arr = new Object[size];
-      Node node = first;
-      int index = 0;
-      while (index < size) {
-        arr[index++] = node.value;
-        node = node.next;
-      }
+  public Object[] toArray() {
+    Object[] arr = new Object[size];
+    int index = 0;
+    Node<E> node = first;
+    while (node != null) {
+      arr[index++] = node.value;
+      node = node.next;
+    }
     return arr;
   }
 
-  public Object get(int index) {
+  public E get(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
     int cursor = 0;
-    Node node = first;
+    Node<E> node = first;
     while (++cursor <= index) {
       node = node.next;
     }
+
     return node.value;
   }
 
-  public Object set(int index, Object value) {
+  public E set(int index, E value) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    Object old;
     int cursor = 0;
-    Node node = first;
+    Node<E> node = first;
     while (++cursor <= index) {
       node = node.next;
     }
-    old = node.value;
+
+    E old = node.value;
     node.value = value;
     return old;
   }
 
-  public void add(int index, Object value) {
+  public void add(int index, E value) {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    Node node = new Node();
+    Node<E> node = new Node<>();
     node.value = value;
 
     if (first == null) {
@@ -81,8 +85,8 @@ public class LinkedList {
 
     } else {
       int cursor = 0;
-      Node currNode = first;
-      while (cursor++ < index) {
+      Node<E> currNode = first;
+      while (++cursor < index) {
         currNode = currNode.next;
       }
       node.next = currNode.next;
@@ -91,45 +95,47 @@ public class LinkedList {
     size++;
   }
 
-  public Object remove(int index) {
+  public E remove(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("무효한 인덱스입니다.");
     }
 
-    Node deleted;
+    Node<E> deleted = null;
 
     if (size == 1) {
-      deleted = first;
+      deleted = first; // 삭제할 노드 보관
       first = last = null;
 
     } else if (index == 0) {
-      deleted = first;
+      deleted = first; // 삭제할 노드 보관
       first = first.next;
 
     } else {
       int cursor = 0;
-      Node node = first;
+      Node<E> currNode = first;
       while (++cursor < index) {
-        node = node.next;
+        currNode = currNode.next;
       }
-      deleted = node.next;
-      node.next = node.next.next;
+      deleted = currNode.next; // 삭제할 노드 보관
+      currNode.next = currNode.next.next;
+
       if (index == (size - 1)) {
-        last = node;
+        last = currNode;
       }
     }
 
-    Object old = deleted.value;
-    deleted.value = null;
-    deleted.next = null;
     size--;
+
+    E old = deleted.value;
+    deleted.value = null; // 가비지가 되기 전에 다른 객체를 참조하던 것을 제거한다.
+    deleted.next = null; // 가비지가 되기 전에 다른 객체를 참조하던 것을 제거한다.
     return old;
   }
 
-  public boolean remove(Object value) {
-
+  public boolean remove(E value) {
     Node prevNode = null;
     Node node = first;
+
     while (node != null) {
       if (node.value.equals(value)) {
         break;
@@ -144,18 +150,60 @@ public class LinkedList {
 
     if (node == first) {
       first = first.next;
+      if (first == null) {
+        last = null;
+      }
+
     } else {
       prevNode.next = node.next;
-      if (node == last) {
-        last = prevNode;
-      }
     }
+
     size--;
     return true;
   }
 
+  public E[] toArray(final E[] arr) {
+    E[] values = arr;
+    if (values.length < size) {
+      values = Arrays.copyOf(arr, size);
+    }
+
+    int i = 0;
+    Node<E> node = first;
+
+    while (node != null) {
+      values[i++] = node.value;
+      node = node.next;
+    }
+
+    return values;
+  }
+
+  private static class Node<E> {
+
+    E value;
+    Node<E> next;
+  }
+
+  @Override
+  public Iterator<E> iterator() {
+    return new Iterator<E>() {
+
+      Node<E> cursor = (Node<E>) LinkedList.this.first;
+
+      @Override
+      public boolean hasNext() {
+        return cursor != null;
+      }
+
+      @Override
+      public E next() {
+        E value = cursor.value;
+        cursor = cursor.next;
+        return value;
+      }
+    };
+  }
+
 
 }
-
-
-// add, toArray, get, set, add, remove, remove, toArray(arr)
