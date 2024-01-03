@@ -20,22 +20,39 @@ import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.ArrayList;
-import bitcamp.util.LinkedList;
-import bitcamp.util.List;
 import bitcamp.util.Prompt;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class App {
 
+  Prompt prompt = new Prompt(System.in);
+
+  List<Board> boardRepository = new LinkedList<>();
+  List<Assignment> assignmentRepository = new LinkedList<>();
+  List<Member> memberRepository = new ArrayList<>();
+  List<Board> greetingRepository = new ArrayList<>();
+
+  MenuGroup mainMenu;
+
+  App() {
+    prepareMenu();
+    loadAssignment();
+    loadBoard();
+    loadMember();
+  }
+
   public static void main(String[] args) throws Exception {
-    Prompt prompt = new Prompt(System.in);
+    new App().run();
+  }
 
-    List<Board> boardRepository = new LinkedList<>();
-    List<Assignment> assignmentRepository = new LinkedList<>();
-    List<Member> memberRepository = new ArrayList<>();
-    List<Board> greetingRepository = new ArrayList<>();
-
-    MenuGroup mainMenu = MenuGroup.getInstance("메인");
+  void prepareMenu() {
+    mainMenu = MenuGroup.getInstance("메인");
 
     MenuGroup assignmentMenu = mainMenu.addGroup("과제");
     assignmentMenu.addItem("등록", new AssignmentAddHandler(assignmentRepository, prompt));
@@ -66,13 +83,9 @@ public class App {
     greetingMenu.addItem("목록", new BoardListHandler(greetingRepository, prompt));
 
     mainMenu.addItem("도움말", new HelpHandler(prompt));
+  }
 
-    // 프로그램을 실행하다가 어느 지점에서 예외가 발생하면 해당 위치에서 적절한 조치를 취할 것이다.
-    // 다만 그에 벗어나서 조치가 되지 않은 예외가 보고 되는 경우를 대비해
-    // 마지막 보루인 main()에서는 예외를 처리해야 한다.
-    // main()에서 마저 처리하지 않는다면 JVM에게 보고될 것이고,
-    // JVM은 개발자나 알아 볼 메시지를 출력하고 종료할 것이다.
-    //
+  void run() {
     while (true) {
       try {
         mainMenu.execute(prompt);
@@ -81,6 +94,256 @@ public class App {
       } catch (Exception e) {
         System.out.println("예외 발생!");
       }
+    }
+    saveAssignment();
+    saveBoard();
+    saveMember();
+  }
+
+  void saveAssignment() {
+    try (FileOutputStream out = new FileOutputStream("assignment.data")) {
+
+      out.write(assignmentRepository.size() >> 8);
+      out.write(assignmentRepository.size());
+
+      for (Assignment assignment : assignmentRepository) {
+
+        String title = assignment.getTitle();
+        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String content = assignment.getContent();
+        bytes = content.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String date = assignment.getDeadline().toString();
+        bytes = date.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  void loadAssignment() {
+    try (FileInputStream in = new FileInputStream("assignment.data")) {
+
+      byte[] bytes = new byte[60000];
+      int size = in.read() << 8 | in.read();
+
+      for (int i = 0; i < size; i ++) {
+        int len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String title = new String(bytes, 0, len ,StandardCharsets.UTF_8);
+
+        len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        in.read(bytes, 0, 10);
+        Date deadLine = Date.valueOf(new String(bytes, 0, 10, StandardCharsets.UTF_8));
+
+        Assignment assignment = new Assignment();
+        assignment.setTitle(title);
+        assignment.setContent(content);
+        assignment.setDeadline(deadLine);
+
+        assignmentRepository.add(assignment);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  void saveBoard () {
+    try (FileOutputStream out = new FileOutputStream("board.data")) {
+
+      out.write(boardRepository.size() >> 8);
+      out.write(boardRepository.size());
+
+      for (Board board : boardRepository) {
+        String title = board.getTitle();
+        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String content = board.getContent();
+        bytes = content.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String writer = board.getWriter();
+        bytes = writer.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        long date = board.getCreatedDate().getTime();
+        out.write((int) (date >> 56));
+        out.write((int) (date >> 48));
+        out.write((int) (date >> 40));
+        out.write((int) (date >> 32));
+        out.write((int) (date >> 24));
+        out.write((int) (date >> 16));
+        out.write((int) (date >> 8));
+        out.write((int) date);
+
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  void loadBoard () {
+    try (FileInputStream in = new FileInputStream("board.data")) {
+
+      byte[] bytes = new byte[60000];
+      int size = in.read() << 8 | in.read();
+
+      for (int i = 0; i < size; i++) {
+
+        int len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String writer = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        long date = ((long) in.read() << 56 ) |
+            ((long) in.read() << 48 ) |
+            ((long) in.read() << 40 ) |
+            ((long) in.read() << 32 ) |
+            ((long) in.read() << 24 ) |
+            ((long) in.read() << 16 ) |
+            ((long) in.read() << 8 ) |
+            ((long) in.read());
+
+        Board board = new Board();
+        board.setTitle(title);
+        board.setContent(content);
+        board.setWriter(writer);
+        board.setCreatedDate(new java.util.Date(date));
+
+        boardRepository.add(board);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  void saveMember () {
+    try (FileOutputStream out = new FileOutputStream("member.data")) {
+
+      out.write(memberRepository.size() >> 8);
+      out.write(memberRepository.size());
+
+      for (Member member : memberRepository) {
+
+        String email = member.getEmail();
+        byte[] bytes = email.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String name = member.getName();
+        bytes = name.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        String password = member.getPassword();
+        bytes = password.getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes.length >> 8);
+        out.write(bytes.length);
+
+        out.write(bytes);
+
+        long date = member.getCreatedDate().getTime();
+        out.write((int) date >> 56);
+        out.write((int) date >> 48);
+        out.write((int) date >> 40);
+        out.write((int) date >> 32);
+        out.write((int) date >> 24);
+        out.write((int) date >> 16);
+        out.write((int) date >> 8);
+        out.write((int) date);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  void loadMember() {
+    try (FileInputStream in = new FileInputStream("member.data")) {
+
+      byte[] bytes = new byte[60000];
+      int size = in.read() << 8 | in.read();
+
+      for (int i = 0; i < size; i++) {
+        int len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String email = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String name = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        len = in.read() << 8 | in.read();
+        in.read(bytes, 0, len);
+        String password = new String(bytes, 0, len, StandardCharsets.UTF_8);
+
+        long date = ((long) in.read() << 56) |
+            ((long) in.read() << 48) |
+            ((long) in.read() << 40) |
+            ((long) in.read() << 32) |
+            ((long) in.read() << 24) |
+            ((long) in.read() << 16) |
+            ((long) in.read() << 8) |
+            ((long) in.read());
+
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        member.setPassword(password);
+        member.setCreatedDate(new java.util.Date(date));
+
+        memberRepository.add(member);
+
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }
