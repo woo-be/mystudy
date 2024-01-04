@@ -1,4 +1,4 @@
-package algorithm.test.baekjoon.level03.exam12;
+package algorithm.test.baekjoon.level04.exam02;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,20 +12,23 @@ public class Main {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+    int n = Integer.valueOf(br.readLine());
+
     String str = br.readLine();
     String[] strs = str.split(" ");
-    int n = Integer.valueOf(strs[0]);
-    int x = Integer.valueOf(strs[1]);
-    String str1 = br.readLine();
-    String[] strs1 = str1.split(" ");
+
+    int v = Integer.valueOf(br.readLine());
+
+    int result = 0;
 
     for (int i = 0; i < n; i++) {
-      if (Integer.valueOf(strs1[i]) < x) {
-        bw.write(strs1[i] + " ");
+      if (Integer.valueOf(strs[i]) == v) {
+        result++;
       }
     }
+    bw.write(String.valueOf(result));
+    br.close();
     bw.flush();
     bw.close();
-    br.close();
   }
 }
