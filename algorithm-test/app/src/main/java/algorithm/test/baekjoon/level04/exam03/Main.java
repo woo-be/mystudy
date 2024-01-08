@@ -12,32 +12,28 @@ public class Main {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-    String str1 = br.readLine();
-    String[] strs1 = str1.split(" ");
-    int n = Integer.valueOf(strs1[0]);
-    int m = Integer.valueOf(strs1[1]);
-    int[] baskets = new int[n];
+    int n = Integer.valueOf(br.readLine());
+    String str = br.readLine();
+    String[] strs = str.split(" ");
+    int[] nums = new int[n];
+    for (int i = 0; i < n; i++) {
+      nums[i] = Integer.valueOf(strs[i]);
+    }
 
-    for (int a = 0; a < m; a++) {
-      String str2 = br.readLine();
-      String[] strs2 = str2.split(" ");
-      int i = Integer.valueOf(strs2[0]);
-      int j = Integer.valueOf(strs2[1]);
-      int k = Integer.valueOf(strs2[2]);
+    int min = nums[0], max = nums[0];
 
-      for (; i <= j; i++) {
-        baskets[(i - 1)] = k;
+    for (int j = 1; j < n; j++) {
+      if (nums[j] < min) {
+        min = nums[j];
+      }
+      if (nums[j] > max) {
+        max = nums[j];
       }
     }
 
-    for (int x = 0; x < n; x++) {
-      bw.write(String.valueOf(baskets[x]));
-      bw.write(" ");
-    }
-
+    bw.write(String.valueOf(min) + " " + String.valueOf(max));
     bw.flush();
     bw.close();
-    br.close();
-
   }
 }
+
