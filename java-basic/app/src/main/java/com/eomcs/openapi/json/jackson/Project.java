@@ -3,12 +3,21 @@ package com.eomcs.openapi.json.jackson;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"owner", "member", "tasks", "memberNames"})
 public class Project {
   private int no;
   private String title;
   private String content;
+  
+  // ObjectMapper 객체가 이 필드의 값을 읽고 쓸 때 사용할 날짜 패턴을 지정한다.
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asis/Seoul")
   private Date startDate;
+  
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asis/Seoul")
   private Date endDate;
   private Member owner;
   private List<Member> members = new ArrayList<>();
