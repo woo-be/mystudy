@@ -12,6 +12,16 @@ public class Board implements Serializable {
   private String writer;
   private Date createdDate;
 
+  @Override
+  public String toString() {
+    return "Board{" +
+        "title='" + title + '\'' +
+        ", content='" + content + '\'' +
+        ", writer='" + writer + '\'' +
+        ", createdDate=" + createdDate +
+        '}';
+  }
+
   // 팩토리 메서드
   public static Board createFromCsv(String csv) {
     String[] values = csv.split(",");

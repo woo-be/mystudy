@@ -12,6 +12,16 @@ public class Member implements Serializable {
   private String password;
   private Date createdDate;
 
+  @Override
+  public String toString() {
+    return "Member{" +
+        "email='" + email + '\'' +
+        ", name='" + name + '\'' +
+        ", password='" + password + '\'' +
+        ", createdDate=" + createdDate +
+        '}';
+  }
+
   // CSV 문자열을 가지고 객체에 저장하기
   // 방법2) 팩토리 메서드를 통해 객체를 생성하기
   public static Member createFromCsv(String csv) {

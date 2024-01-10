@@ -11,6 +11,15 @@ public class Assignment implements Serializable {
   private String content;
   private Date deadline;
 
+  @Override
+  public String toString() {
+    return "Assignment{" +
+        "title='" + title + '\'' +
+        ", content='" + content + '\'' +
+        ", deadline=" + deadline +
+        '}';
+  }
+
   // 팩토리 메서드
   public static Assignment createFromCsv(String csv) {
     String[] values = csv.split(","); // "aaa,aaaa,2023-01-01" ==> {"aaa","aaaa","2023-1-1"}
