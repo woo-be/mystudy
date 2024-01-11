@@ -16,7 +16,7 @@ public class Member implements Serializable {
   @Override
   public String toString() {
     return "Member{" +
-        "No=" + no +
+        "no=" + no +
         ", email='" + email + '\'' +
         ", name='" + name + '\'' +
         ", password='" + password + '\'' +

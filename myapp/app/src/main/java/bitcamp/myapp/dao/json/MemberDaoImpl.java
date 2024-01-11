@@ -17,7 +17,7 @@ public class MemberDaoImpl extends AbstractDao<Member> implements MemberDao {
   @Override
   public void add(Member member) {
     member.setNo(++lastKey);
-    list.add(member);
+    this.list.add(member);
     saveData();
   }
 
@@ -27,6 +27,7 @@ public class MemberDaoImpl extends AbstractDao<Member> implements MemberDao {
     if (index == -1) {
       return 0;
     }
+
     list.remove(index);
     saveData();
     return 1;
@@ -34,7 +35,7 @@ public class MemberDaoImpl extends AbstractDao<Member> implements MemberDao {
 
   @Override
   public List<Member> findAll() {
-    return list.subList(0, list.size());
+    return this.list.subList(0, list.size());
   }
 
   @Override
@@ -56,8 +57,8 @@ public class MemberDaoImpl extends AbstractDao<Member> implements MemberDao {
     saveData();
     return 1;
   }
-
-  public int indexOf(int no) {
+  
+  private int indexOf(int no) {
     for (int i = 0; i < list.size(); i++) {
       if (list.get(i).getNo() == no) {
         return i;
