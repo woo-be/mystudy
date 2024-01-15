@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentDaoImpl implements AssignmentDao {
-  
+
   String dataName;
   DataInputStream in;
   DataOutputStream out;
