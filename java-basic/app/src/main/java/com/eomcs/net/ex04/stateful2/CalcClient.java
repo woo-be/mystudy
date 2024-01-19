@@ -28,7 +28,7 @@ public class CalcClient {
     }
 
     in.close();
-    out.close();
+    // out.close();
     socket.close();
     keyScan.close();
   }
