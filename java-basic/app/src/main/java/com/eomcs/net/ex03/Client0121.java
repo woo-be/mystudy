@@ -28,6 +28,7 @@ public class Client0121 {
         System.out.printf("%02x ", buf[i]);
       }
 
+
     } catch (Exception e) {
       e.printStackTrace();
     }
