@@ -35,7 +35,7 @@ public class ClientApp {
   MenuGroup mainMenu;
 
   ClientApp() {
-    prepareNetWork();
+    prepareNetwork();
     prepareMenu();
   }
 
@@ -44,7 +44,7 @@ public class ClientApp {
     new ClientApp().run();
   }
 
-  void prepareNetWork() {
+  void prepareNetwork() {
     try {
       DaoProxyGenerator daoGenerator = new DaoProxyGenerator("localhost", 8888);
 

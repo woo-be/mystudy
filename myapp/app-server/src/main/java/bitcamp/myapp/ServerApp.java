@@ -4,6 +4,7 @@ import bitcamp.RequestException;
 import bitcamp.myapp.dao.json.AssignmentDaoImpl;
 import bitcamp.myapp.dao.json.BoardDaoImpl;
 import bitcamp.myapp.dao.json.MemberDaoImpl;
+import bitcamp.util.ThreadPool;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.DataInputStream;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 
 public class ServerApp {
 
+  ThreadPool threadPool = new ThreadPool();
   HashMap<String, Object> daoMap = new HashMap<>();
   Gson gson;
 
@@ -42,14 +44,7 @@ public class ServerApp {
 
       while (true) {
         Socket socket = serverSocket.accept();
-        new Thread(() -> {
-          try {
-            service(socket);
-          } catch (Exception e) {
-            System.out.println("클라이언트 요청 처리 중 오류 발생!");
-            e.printStackTrace();
-          }
-        }).start();
+        threadPool.get().setWorker(() -> service(socket));
       }
 
     } catch (Exception e) {
@@ -64,14 +59,14 @@ public class ServerApp {
         DataInputStream in = new DataInputStream(socket.getInputStream());
         DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
-      System.out.println("클라이언트와 연결됨!");
+      System.out.printf("[%s] 클라이언트와 연결됨!\n", Thread.currentThread().getName());
 
       processRequest(in, out);
 
-      System.out.println("클라이언트 연결 종료!");
+      System.out.printf("[%s] 클라이언트 연결 종료!\n", Thread.currentThread().getName());
 
     } catch (Exception e) {
-      System.out.println("클라이언트 연결 오류!");
+      System.out.printf("[%s] 클라이언트 연결 오류!\n", Thread.currentThread().getName());
     }
   }
 
@@ -104,13 +99,13 @@ public class ServerApp {
       out.writeUTF(gson.toJson(returnValue));
       System.out.println("클라이언트에게 응답 완료!");
 
-    } catch (RuntimeException e) {
+    } catch (RequestException e) {
       out.writeUTF("400");
-      out.writeUTF(e.getMessage());
+      out.writeUTF(gson.toJson(e.getMessage()));
 
     } catch (Exception e) {
       out.writeUTF("500");
-      out.writeUTF(e.getMessage());
+      out.writeUTF(gson.toJson(e.getMessage()));
     }
   }
 
@@ -126,7 +121,7 @@ public class ServerApp {
 
   Object[] getArguments(Method m, String json) {
     Parameter[] params = m.getParameters();
-    System.out.printf("파라미터 개수: %s\n", params.length);
+    System.out.printf("파라미터 개수: %d\n", params.length);
 
     Object[] args = new Object[params.length];
 
