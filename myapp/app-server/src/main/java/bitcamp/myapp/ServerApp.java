@@ -5,6 +5,7 @@ import bitcamp.myapp.dao.json.AssignmentDaoImpl;
 import bitcamp.myapp.dao.json.BoardDaoImpl;
 import bitcamp.myapp.dao.json.MemberDaoImpl;
 import bitcamp.util.ThreadPool;
+import bitcamp.util.Worker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.DataInputStream;
@@ -44,7 +45,12 @@ public class ServerApp {
 
       while (true) {
         Socket socket = serverSocket.accept();
-        threadPool.get().setWorker(() -> service(socket));
+        threadPool.get().setWorker(new Worker() {
+          @Override
+          public void play() {
+            service(socket);
+          }
+        });
       }
 
     } catch (Exception e) {
