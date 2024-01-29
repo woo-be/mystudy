@@ -3,27 +3,23 @@ package algorithm.test;
 public class Main {
   public static void main(String[] args) throws Exception {
 
-    String rating = "A+";
+    int[] a = new int[3];
+    for (int i = 0; i < a.length; i++) {
+      a[i] = i;
+      System.out.println(a[i]);
+    }
 
-    switch (rating) {
-      case "A+":
-        System.out.println(4.5);
-      case "A0":
-        System.out.println(4.5);
-      case "B+":
-        System.out.println(4.5);
-      case "B0":
-        System.out.println(4.5);
-      case "C+":
-        System.out.println(4.5);
-      case "C0":
-        System.out.println(4.5);
-      case "D+":
-        System.out.println(4.5);
-      case "D0":
-        System.out.println(4.5);
-      case "F":
-        System.out.println(4.5);
+    System.out.println("------------------------");
+
+    int[][] aa = new int[3][3];
+    for (int i = 0; i < aa.length; i++) {
+      aa[0][i] = a[i];
+    }
+
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        System.out.println(aa[i][j]);
+      }
     }
 
   }
