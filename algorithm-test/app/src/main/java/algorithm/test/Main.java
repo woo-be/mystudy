@@ -1,15 +1,13 @@
 package algorithm.test;
 
-import java.util.Scanner;
-
 public class Main {
 
   public static void main(String[] args) {
 
-    int[] a = new int[3];
-    for (int i : a) {
-      System.out.println(i);
-    }
+    String c = "1";
+    char a = String.
+
+        System.out.println((int) c);
 
   }
 
