@@ -4,10 +4,10 @@ public class Main {
 
   public static void main(String[] args) {
 
-    String c = "1";
-    char a = String.
+    int i = 35;
+    char c = (char) (i + 55);
 
-        System.out.println((int) c);
+    System.out.println(c);
 
   }
 

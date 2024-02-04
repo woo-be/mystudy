@@ -18,10 +18,6 @@ public class Main {
     char[] nArr = n.toCharArray();
     int[] arr = charArrToIntArr(nArr);
 
-    for (int i : arr) {
-      System.out.println(i);
-    }
-
     int sum = 0;
 
     for (int i = 0; i < arr.length; i++) {
