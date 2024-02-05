@@ -17,15 +17,32 @@ public class ToDoListHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() {
-    System.out.printf("%-4s\t%-20s\t%s\n", "번호", "할일", "기한");
+    System.out.printf("%-2s\t%-23s\t%-8s\t%s\n", "번호", "할일", "기한", "우선순위");
 
     List<ToDo> list = toDoDao.findAll();
 
     for (ToDo toDo : list) {
-      System.out.printf("%-4d\t%-20s\t%s\n",
-          toDo.getNo(),
-          toDo.getTitle(),
-          toDo.getDeadLine());
+      int titleSize = 25 - getKorCnt(toDo.getTitle());
+
+//      System.out.printf("%-4s\t%-25s%s\n",
+//          String.valueOf(toDo.getNo()),
+//          toDo.getTitle(),
+//          toDo.getDeadLine());
+      System.out.printf(
+          String.format("%-4d\t%%-" + titleSize + "s\t%s\t%s\n", toDo.getNo(), toDo.getDeadLine(),
+              toDo.getPriority()),
+          toDo.getTitle());
     }
   }
+
+  private static int getKorCnt(String kor) {
+    int cnt = 0;
+    for (int i = 0; i < kor.length(); i++) {
+      if (kor.charAt(i) >= '가' && kor.charAt(i) <= '힣') {
+        cnt++;
+      }
+    }
+    return cnt;
+  }
+
 }

@@ -6,10 +6,12 @@ public class Main {
 
   public static void main(String[] args) {
 
-    int[] a = new int[3];
-    for (int i : a) {
-      System.out.println(i);
-    }
+    String s = "가나다라";
+    int i = 123;
+    int a = 25;
+
+    String str = String.format("%d\t%%-" + a + "s%s", i, s);
+    System.out.println(str);
 
   }
 

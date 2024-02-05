@@ -27,9 +27,10 @@ public class ToDoModifyHandler extends AbstractMenuHandler {
 
       ToDo toDo = new ToDo();
       toDo.setNo(old.getNo());
-      toDo.setTitle(this.prompt.input("이름(%s)? ", old.getTitle()));
+      toDo.setTitle(this.prompt.input("제목(%s)? ", old.getTitle()));
       toDo.setContent(this.prompt.input("내용(%s)? ", old.getContent()));
       toDo.setDeadLine(this.prompt.inputDate("기한(%s)? ", old.getDeadLine()));
+      toDo.setLevel(this.prompt.inputInt("우선순위(%s)? ", old.getLevel()));
 
       toDoDao.update(toDo);
       System.out.println("할일을 변경했습니다.");

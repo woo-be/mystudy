@@ -22,8 +22,8 @@ public class ToDoDaoImpl implements ToDoDao {
     try {
       Statement stmt = con.createStatement();
       stmt.executeUpdate(String.format(
-          "insert into assignments(title,content,deadline) values('%s','%s','%s')",
-          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine()));
+          "insert into todo(title,content,deadline,level) values('%s','%s','%s',%d)",
+          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine(), toDo.getLevel()));
 
     } catch (Exception e) {
       throw new DaoException("SQL:데이터 입력 오류", e);
@@ -34,8 +34,9 @@ public class ToDoDaoImpl implements ToDoDao {
   public int delete(int no) {
     try {
       Statement stmt = con.createStatement();
-      return stmt.executeUpdate(
-          String.format("delete from assignments where assignment_no=%d", no));
+      int a = stmt.executeUpdate(String.format("delete from todo where no=%d", no));
+      stmt.executeUpdate(("alter table todo auto_increment=1"));
+      return a;
 
     } catch (Exception e) {
       throw new DaoException("SQL:데이터 삭제 오류", e);
@@ -46,16 +47,18 @@ public class ToDoDaoImpl implements ToDoDao {
   public List<ToDo> findAll() {
     try {
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery("select * from assignments");
+      ResultSet rs = stmt.executeQuery(
+          "select no,title,content,deadline,p.priority from todo join priority p on todo.level = p.level;");
 
       ArrayList<ToDo> list = new ArrayList<>();
 
       while (rs.next()) {
         ToDo toDo = new ToDo();
-        toDo.setNo(rs.getInt("assignment_no"));
+        toDo.setNo(rs.getInt("no"));
         toDo.setTitle(rs.getString("title"));
         toDo.setContent(rs.getString("content"));
         toDo.setDeadLine(rs.getDate("deadline"));
+        toDo.setPriority(rs.getString("priority"));
 
         list.add(toDo);
       }
@@ -70,16 +73,19 @@ public class ToDoDaoImpl implements ToDoDao {
   public ToDo findBy(int no) {
     try {
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery("select * from assignments where assignment_no=" + no);
-
-      ArrayList<ToDo> list = new ArrayList<>();
+      ResultSet rs = stmt.executeQuery(
+          "select no,title,content,deadline,todo.level,p.priority "
+              + "from todo join priority p on todo.level=p.level where no="
+              + no);
 
       if (rs.next()) {
         ToDo toDo = new ToDo();
-        toDo.setNo(rs.getInt("assignment_no"));
+        toDo.setNo(rs.getInt("no"));
         toDo.setTitle(rs.getString("title"));
         toDo.setContent(rs.getString("content"));
         toDo.setDeadLine(rs.getDate("deadline"));
+        toDo.setLevel(rs.getInt("level"));
+        toDo.setPriority(rs.getString("priority"));
 
         return toDo;
       }
@@ -95,8 +101,8 @@ public class ToDoDaoImpl implements ToDoDao {
     try {
       Statement stmt = con.createStatement();
       return stmt.executeUpdate(String.format(
-          "update assignments set title='%s', content='%s', deadline='%s' where assignment_no=%d",
-          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine(),
+          "update todo set title='%s', content='%s', deadline='%s', level=%d where no=%d",
+          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine(), toDo.getLevel(),
           toDo.getNo()));
 
     } catch (Exception e) {

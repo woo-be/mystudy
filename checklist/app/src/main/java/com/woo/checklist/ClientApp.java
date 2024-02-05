@@ -4,6 +4,7 @@
 package com.woo.checklist;
 
 import com.woo.checklist.dao.ToDoDao;
+import com.woo.checklist.dao.mysql.ToDoDaoImpl;
 import com.woo.checklist.handler.toDo.ToDoAddHandler;
 import com.woo.checklist.handler.toDo.ToDoDeleteHandler;
 import com.woo.checklist.handler.toDo.ToDoListHandler;
@@ -11,6 +12,8 @@ import com.woo.checklist.handler.toDo.ToDoModifyHandler;
 import com.woo.checklist.handler.toDo.ToDoViewHandler;
 import com.woo.menu.MenuGroup;
 import com.woo.util.Prompt;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class ClientApp {
 
@@ -21,7 +24,7 @@ public class ClientApp {
   MenuGroup mainMenu;
 
   ClientApp() {
-//    prepareDatabase();
+    prepareDatabase();
     prepareMenu();
   }
 
@@ -33,7 +36,7 @@ public class ClientApp {
   void prepareMenu() {
     mainMenu = MenuGroup.getInstance("메인");
 
-    MenuGroup toDoMenu = mainMenu.addGroup("할 일들");
+    MenuGroup toDoMenu = mainMenu.addGroup("할 일 목록");
     toDoMenu.addItem("등록", new ToDoAddHandler(toDoDao, prompt));
     toDoMenu.addItem("조회", new ToDoViewHandler(toDoDao, prompt));
     toDoMenu.addItem("수정", new ToDoModifyHandler(toDoDao, prompt));
@@ -42,23 +45,23 @@ public class ClientApp {
 
   }
 
-//  void prepareDatabase() {
-//    try {
-//      // JVM이 JDBC 드라이버 파일(.jar)에 설정된대로 자동으로 처리한다.
-////      Driver driver = new com.mysql.cj.jdbc.Driver();
-////      DriverManager.registerDriver(driver);
-//
-//      Connection con = DriverManager.getConnection(
-////          "jdbc:mysql://localhost/checklist", "study", "Bitcamp!@#123");
-//          "jdbc:mysql://db-ld285-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "Bitcamp!@#123");
-//
-//      toDoDao = new ToDoDaoImpl(con);
-//
-//    } catch (Exception e) {
-//      System.out.println("통신 오류!");
-//      e.printStackTrace();
-//    }
-//  }
+  void prepareDatabase() {
+    try {
+      // JVM이 JDBC 드라이버 파일(.jar)에 설정된대로 자동으로 처리한다.
+//      Driver driver = new com.mysql.cj.jdbc.Driver();
+//      DriverManager.registerDriver(driver);
+
+      Connection con = DriverManager.getConnection(
+//          "jdbc:mysql://localhost/checklist", "study", "Bitcamp!@#123");
+          "jdbc:mysql://db-ld285-kr.vpc-pub-cdb.ntruss.com/checklist", "study", "Bitcamp!@#123");
+
+      toDoDao = new ToDoDaoImpl(con);
+
+    } catch (Exception e) {
+      System.out.println("통신 오류!");
+      e.printStackTrace();
+    }
+  }
 
   void run() {
     while (true) {

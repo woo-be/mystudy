@@ -25,9 +25,10 @@ public class ToDoViewHandler extends AbstractMenuHandler {
       }
 
       System.out.printf("번호: %s\n", toDo.getNo());
-      System.out.printf("이름: %s\n", toDo.getTitle());
+      System.out.printf("제목: %s\n", toDo.getTitle());
       System.out.printf("내용: %s\n", toDo.getContent());
       System.out.printf("기한: %s\n", toDo.getDeadLine());
+      System.out.printf("우선순위: %s\n", toDo.getPriority());
 
     } catch (Exception e) {
       System.out.println("조회 오류!");

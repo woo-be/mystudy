@@ -1,24 +1,15 @@
 package com.woo.checklist.vo;
 
-import java.io.Serializable;
 import java.sql.Date;
 
-public class ToDo implements Serializable {
+public class ToDo {
 
   private int no;
   private String title;
   private String content;
   private Date deadLine;
-
-  @Override
-  public String toString() {
-    return "checkList{" +
-        "no=" + no +
-        ", title='" + title + '\'' +
-        ", content='" + content + '\'' +
-        ", deadLine=" + deadLine +
-        '}';
-  }
+  private int level;
+  private String priority;
 
   public int getNo() {
     return no;
@@ -50,5 +41,21 @@ public class ToDo implements Serializable {
 
   public void setDeadLine(Date deadLine) {
     this.deadLine = deadLine;
+  }
+
+  public int getLevel() {
+    return level;
+  }
+
+  public void setLevel(int level) {
+    this.level = level;
+  }
+
+  public String getPriority() {
+    return priority;
+  }
+
+  public void setPriority(String priority) {
+    this.priority = priority;
   }
 }

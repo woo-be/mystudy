@@ -19,9 +19,10 @@ public class ToDoAddHandler extends AbstractMenuHandler {
   protected void action() {
     try {
       ToDo toDo = new ToDo();
-      toDo.setTitle(this.prompt.input("이름? "));
+      toDo.setTitle(this.prompt.input("제목? "));
       toDo.setContent(this.prompt.input("내용? "));
       toDo.setDeadLine(this.prompt.inputDate("기한?(예: 2023-12-25) "));
+      toDo.setLevel(this.prompt.inputInt("우선순위?(1-3 중 입력) "));
 
       toDoDao.add(toDo);
 
