@@ -4,8 +4,8 @@ import com.woo.checklist.dao.DaoException;
 import com.woo.checklist.dao.ToDoDao;
 import com.woo.checklist.vo.ToDo;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +19,15 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public void add(ToDo toDo) {
-    try {
-      Statement stmt = con.createStatement();
-      stmt.executeUpdate(String.format(
-          "insert into todo(title,content,deadline,level) values('%s','%s','%s',%d)",
-          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine(), toDo.getLevel()));
+    try (PreparedStatement pstmt = con.prepareStatement(
+        "insert into todo(title,content,deadline,level) values(?,?,?,?)")) {
+
+      pstmt.setString(1, toDo.getTitle());
+      pstmt.setString(2, toDo.getContent());
+      pstmt.setDate(3, toDo.getDeadLine());
+      pstmt.setInt(4, toDo.getLevel());
+
+      pstmt.executeUpdate();
 
     } catch (Exception e) {
       throw new DaoException("SQL:데이터 입력 오류", e);
@@ -32,10 +36,13 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public int delete(int no) {
-    try {
-      Statement stmt = con.createStatement();
-      int a = stmt.executeUpdate(String.format("delete from todo where no=%d", no));
-      stmt.executeUpdate(("alter table todo auto_increment=1"));
+    try (PreparedStatement pstmt1 = con.prepareStatement("delete from todo where no=?");
+        PreparedStatement pstmt2 = con.prepareStatement("alter table todo auto_increment=1")) {
+
+      pstmt1.setInt(1, no);
+
+      int a = pstmt1.executeUpdate();
+      pstmt2.executeUpdate();
       return a;
 
     } catch (Exception e) {
@@ -45,10 +52,9 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public List<ToDo> findAll() {
-    try {
-      Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery(
-          "select no,title,content,deadline,p.priority from todo join priority p on todo.level = p.level;");
+    try (PreparedStatement pstmt = con.prepareStatement(
+        "select no,title,content,deadline,p.priority from todo join priority p on todo.level = p.level");
+        ResultSet rs = pstmt.executeQuery()) {
 
       ArrayList<ToDo> list = new ArrayList<>();
 
@@ -71,12 +77,12 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public ToDo findBy(int no) {
-    try {
-      Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery(
-          "select no,title,content,deadline,todo.level,p.priority "
-              + "from todo join priority p on todo.level=p.level where no="
-              + no);
+    try (PreparedStatement pstmt = con.prepareStatement(
+        "select no,title,content,deadline,todo.level,p.priority from todo join priority p on todo.level=p.level where no=?")) {
+
+      pstmt.setInt(1, no);
+
+      ResultSet rs = pstmt.executeQuery();
 
       if (rs.next()) {
         ToDo toDo = new ToDo();
@@ -98,12 +104,16 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public int update(ToDo toDo) {
-    try {
-      Statement stmt = con.createStatement();
-      return stmt.executeUpdate(String.format(
-          "update todo set title='%s', content='%s', deadline='%s', level=%d where no=%d",
-          toDo.getTitle(), toDo.getContent(), toDo.getDeadLine(), toDo.getLevel(),
-          toDo.getNo()));
+    try (PreparedStatement pstmt = con.prepareStatement(
+        "update todo set title=?, content=?, deadline=?, level=? where no=?")) {
+
+      pstmt.setString(1, toDo.getTitle());
+      pstmt.setString(2, toDo.getContent());
+      pstmt.setDate(3, toDo.getDeadLine());
+      pstmt.setInt(4, toDo.getLevel());
+      pstmt.setInt(5, toDo.getNo());
+
+      return pstmt.executeUpdate();
 
     } catch (Exception e) {
       throw new DaoException("SQL:데이터 변경 오류", e);
