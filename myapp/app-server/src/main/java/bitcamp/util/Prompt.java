@@ -47,8 +47,7 @@ public class Prompt implements AutoCloseable {
     return Date.valueOf(this.input(str, args));
   }
 
-  // -----------------------------------------------------------------------------------------------
-
+  // ------------------------------------------------------------
 
   public void print(String str) {
     writer.print(str);

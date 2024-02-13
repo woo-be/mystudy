@@ -19,7 +19,7 @@ public class MemberModifyHandler extends AbstractMenuHandler {
 
     Member old = memberDao.findBy(no);
     if (old == null) {
-      prompt.println("회원 번호가 유효하지 않습니다!");
+      System.out.println("회원 번호가 유효하지 않습니다!");
       return;
     }
 
