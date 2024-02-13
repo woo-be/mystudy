@@ -30,11 +30,14 @@ public class AssignmentAddHandler extends AbstractMenuHandler {
       con.setAutoCommit(false);
 
       assignmentDao.add(assignment);
-      assignmentDao.add(assignment);
 
-      con.rollback();
+      con.commit();
 
     } catch (Exception e) {
+      try {
+        con.rollback();
+      } catch (Exception e2) {
+      }
       prompt.println("과제 입력 중 오류 발생!");
       prompt.println("다시 시도하시기 바랍니다.");
     } finally {

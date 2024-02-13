@@ -9,11 +9,11 @@ import java.sql.Connection;
 
 public class BoardAddHandler extends AbstractMenuHandler {
 
-  DBConnectionPool threadConnection;
+  DBConnectionPool connectionPool;
   private BoardDao boardDao;
 
-  public BoardAddHandler(DBConnectionPool threadConnection, BoardDao boardDao) {
-    this.threadConnection = threadConnection;
+  public BoardAddHandler(DBConnectionPool connectionPool, BoardDao boardDao) {
+    this.connectionPool = connectionPool;
     this.boardDao = boardDao;
   }
 
@@ -26,13 +26,8 @@ public class BoardAddHandler extends AbstractMenuHandler {
 
     Connection con = null;
     try {
-      con = threadConnection.getConnection();
+      con = connectionPool.getConnection();
       con.setAutoCommit(false);
-
-      boardDao.add(board);
-      boardDao.add(board);
-
-      Thread.sleep(10000);
 
       boardDao.add(board);
 
@@ -43,6 +38,13 @@ public class BoardAddHandler extends AbstractMenuHandler {
         con.rollback();
       } catch (Exception e2) {
       }
+    } finally {
+      try {
+        con.setAutoCommit(true);
+      } catch (Exception e) {
+      }
+
+      connectionPool.returnConnection(con);
     }
   }
 }
