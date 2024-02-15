@@ -27,6 +27,7 @@ public class MemberDaoImpl implements MemberDao {
       pstmt.setString(2, member.getName());
       pstmt.setString(3, member.getPassword());
       pstmt.executeUpdate();
+
     } catch (Exception e) {
       throw new DaoException("데이터 입력 오류", e);
     }
@@ -64,6 +65,7 @@ public class MemberDaoImpl implements MemberDao {
         list.add(member);
       }
       return list;
+
     } catch (Exception e) {
       throw new DaoException("데이터 가져오기 오류", e);
     }
@@ -87,6 +89,7 @@ public class MemberDaoImpl implements MemberDao {
         }
         return null;
       }
+
     } catch (Exception e) {
       throw new DaoException("데이터 가져오기 오류", e);
     }
@@ -102,8 +105,34 @@ public class MemberDaoImpl implements MemberDao {
       pstmt.setString(3, member.getPassword());
       pstmt.setInt(4, member.getNo());
       return pstmt.executeUpdate();
+
     } catch (Exception e) {
       throw new DaoException("데이터 변경 오류", e);
+    }
+  }
+
+  @Override
+  public Member findByEmailAndPassword(String email, String password) {
+    try (Connection con = connectionPool.getConnection();
+        PreparedStatement pstmt = con.prepareStatement(
+            "select member_no, email, name, created_date from members where email=? and password=sha2(?,256)")) {
+      pstmt.setString(1, email);
+      pstmt.setString(2, password);
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          Member member = new Member();
+          member.setNo(rs.getInt("member_no"));
+          member.setEmail(rs.getString("email"));
+          member.setName(rs.getString("name"));
+          member.setCreatedDate(rs.getDate("created_date"));
+          return member;
+        }
+        return null;
+      }
+
+    } catch (Exception e) {
+      throw new DaoException("데이터 가져오기 오류", e);
     }
   }
 }

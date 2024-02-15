@@ -25,13 +25,12 @@ public class BoardListHandler extends AbstractMenuHandler {
         prompt.printf("%-4d\t%-20s\t%10s\t%4$tY-%4$tm-%4$td\t%5$d\n",
             board.getNo(),
             board.getTitle(),
-            board.getWriter(),
+            board.getWriter().getName(),
             board.getCreatedDate(),
             board.getFileCount());
       }
     } catch (Exception e) {
       prompt.println("목록 오류!");
-
     }
   }
 }

@@ -34,17 +34,30 @@ public class BoardViewHandler extends AbstractMenuHandler {
       prompt.printf("번호: %d\n", board.getNo());
       prompt.printf("제목: %s\n", board.getTitle());
       prompt.printf("내용: %s\n", board.getContent());
-      prompt.printf("작성자: %s\n", board.getWriter());
+      prompt.printf("작성자: %s\n", board.getWriter().getName());
       prompt.printf("작성일: %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS\n", board.getCreatedDate());
-      prompt.println("첨부파일: ");
+      prompt.println("첨부파일:");
 
       for (AttachedFile file : files) {
-        prompt.printf(" %s\n", file.getFilePath());
+        prompt.printf("  %s\n", file.getFilePath());
       }
 
     } catch (Exception e) {
-      prompt.println("목록 오류!");
-
+      prompt.println("조회 오류!");
+      e.printStackTrace();
     }
   }
 }
+/*
+[조회]
+번호? 7
+번호: 7
+제목: a2
+내용: aa2
+작성자: a
+작성일: 2024-02-14 00:00:00
+첨부파일:
+  a1.gif
+  a2.gif
+  a3.gif
+ */

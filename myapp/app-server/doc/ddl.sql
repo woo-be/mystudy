@@ -9,7 +9,7 @@ create table boards(
   board_no int not null,
   title varchar(255) not null,
   content text not null,
-  writer varchar(30) not null,
+  writer int not null,
   category int not null,
   created_date datetime null default now()
 );
@@ -28,7 +28,6 @@ alter table board_files
   add constraint primary key (file_no),
   modify column file_no int not null auto_increment,
   add constraint board_files_fk foreign key (board_no) references boards(board_no);
-
 
 create table assignments(
   assignment_no int not null,
@@ -52,4 +51,7 @@ create table members(
 alter table members
   add constraint primary key (member_no),
   modify column member_no int not null auto_increment;
+
+alter table boards
+  add constraint boards_fk foreign key (writer) references members(member_no);
 

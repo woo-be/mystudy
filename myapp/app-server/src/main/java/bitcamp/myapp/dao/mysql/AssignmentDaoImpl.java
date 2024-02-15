@@ -37,7 +37,6 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public int delete(int no) {
-
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
             "delete from assignments where assignment_no=?")) {
@@ -76,7 +75,6 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public Assignment findBy(int no) {
-
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
             "select * from assignments where assignment_no=?")) {

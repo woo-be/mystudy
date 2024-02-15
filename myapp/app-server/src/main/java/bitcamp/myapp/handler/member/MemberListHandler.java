@@ -29,7 +29,7 @@ public class MemberListHandler extends AbstractMenuHandler {
             member.getCreatedDate());
       }
     } catch (Exception e) {
-      prompt.println("삭제 오류!");
+      prompt.println("목록 오류!");
     }
   }
 }

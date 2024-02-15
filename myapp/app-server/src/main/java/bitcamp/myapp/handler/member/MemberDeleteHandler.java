@@ -21,7 +21,6 @@ public class MemberDeleteHandler extends AbstractMenuHandler {
       } else {
         prompt.println("회원을 삭제했습니다.");
       }
-
     } catch (Exception e) {
       prompt.println("삭제 오류!");
     }

@@ -36,7 +36,6 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
   @Override
   public int addAll(List<AttachedFile> files) {
-
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
             "insert into board_files(file_path,board_no) values(?,?)")) {
@@ -53,7 +52,6 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
       throw new DaoException("데이터 입력 오류", e);
     }
   }
-
 
   @Override
   public int delete(int no) {
@@ -83,7 +81,6 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
   @Override
   public List<AttachedFile> findAllByBoardNo(int boardNo) {
-
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
             "select file_no, file_path, board_no"
@@ -104,25 +101,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
           list.add(file);
         }
         return list;
-
       }
-
-    } catch (Exception e) {
-      throw new DaoException("데이터 가져오기 오류", e);
-    }
-  }
-
-  @Override
-  public int update(AttachedFile file) {
-
-    try (Connection con = connectionPool.getConnection();
-        PreparedStatement pstmt = con.prepareStatement(
-            "update board_files set file_path=? where file_no=?")) {
-
-      pstmt.setString(1, file.getFilePath());
-      pstmt.setInt(2, file.getNo());
-
-      return pstmt.executeUpdate();
 
     } catch (Exception e) {
       throw new DaoException("데이터 가져오기 오류", e);

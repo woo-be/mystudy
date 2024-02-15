@@ -33,8 +33,9 @@ public class MemberModifyHandler extends AbstractMenuHandler {
 
       memberDao.update(member);
       prompt.println("회원을 변경했습니다.");
+
     } catch (Exception e) {
-      prompt.println("삭제 오류!");
+      prompt.println("변경 오류!");
     }
   }
 }
