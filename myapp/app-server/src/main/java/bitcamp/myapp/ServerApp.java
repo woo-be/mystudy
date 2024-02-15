@@ -16,8 +16,6 @@ import bitcamp.myapp.handler.assignment.AssignmentDeleteHandler;
 import bitcamp.myapp.handler.assignment.AssignmentListHandler;
 import bitcamp.myapp.handler.assignment.AssignmentModifyHandler;
 import bitcamp.myapp.handler.assignment.AssignmentViewHandler;
-import bitcamp.myapp.handler.auth.LoginHandler;
-import bitcamp.myapp.handler.auth.LogoutHandler;
 import bitcamp.myapp.handler.board.BoardAddHandler;
 import bitcamp.myapp.handler.board.BoardDeleteHandler;
 import bitcamp.myapp.handler.board.BoardListHandler;
@@ -67,7 +65,7 @@ public class ServerApp {
     try {
 //      Connection con = DriverManager.getConnection(
 //
-      //"jdbc:mysql:///studydb", "study", "Bitcamp!@#123");
+      //"jdbc:mysql://db-ld27b-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "Bitcamp!@#123");
 
       connectionPool = new DBConnectionPool(
           "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
@@ -88,9 +86,6 @@ public class ServerApp {
   void prepareMenu() {
     mainMenu = MenuGroup.getInstance("메인");
 
-    mainMenu.addItem("로그인", new LoginHandler(memberDao));
-    mainMenu.addItem("로그아웃", new LogoutHandler());
-
     MenuGroup assignmentMenu = mainMenu.addGroup("과제");
     assignmentMenu.addItem("등록", new AssignmentAddHandler(txManager, assignmentDao));
     assignmentMenu.addItem("조회", new AssignmentViewHandler(assignmentDao));
@@ -100,9 +95,9 @@ public class ServerApp {
 
     MenuGroup boardMenu = mainMenu.addGroup("게시글");
     boardMenu.addItem("등록", new BoardAddHandler(txManager, boardDao, attachedFileDao));
-    boardMenu.addItem("조회", new BoardViewHandler(boardDao, attachedFileDao));
-    boardMenu.addItem("변경", new BoardModifyHandler(boardDao, attachedFileDao));
-    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao, attachedFileDao));
+    boardMenu.addItem("조회", new BoardViewHandler(boardDao));
+    boardMenu.addItem("변경", new BoardModifyHandler(boardDao));
+    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao));
     boardMenu.addItem("목록", new BoardListHandler(boardDao));
 
     MenuGroup memberMenu = mainMenu.addGroup("회원");
@@ -114,9 +109,9 @@ public class ServerApp {
 
     MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
     greetingMenu.addItem("등록", new BoardAddHandler(txManager, greetingDao, attachedFileDao));
-    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao, attachedFileDao));
-    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao, attachedFileDao));
-    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao, attachedFileDao));
+    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao));
+    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao));
+    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao));
     greetingMenu.addItem("목록", new BoardListHandler(greetingDao));
 
     mainMenu.addItem("도움말", new HelpHandler());

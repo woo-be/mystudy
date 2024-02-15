@@ -15,7 +15,6 @@ public class Prompt implements AutoCloseable {
   private DataOutputStream out;
   private StringWriter stringWriter = new StringWriter();
   private PrintWriter writer = new PrintWriter(stringWriter);
-  private Session session = new Session();
 
   public Prompt(DataInputStream in, DataOutputStream out) {
     this.in = in;
@@ -91,9 +90,5 @@ public class Prompt implements AutoCloseable {
 
   public String getFullPath() {
     return String.join("/", breadcrumb.toArray(new String[0]));
-  }
-
-  public Session getSession() {
-    return this.session;
   }
 }

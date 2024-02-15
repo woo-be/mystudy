@@ -11,4 +11,3 @@ public class LogoutHandler extends AbstractMenuHandler {
     prompt.println("로그아웃 했습니다!");
   }
 }
-

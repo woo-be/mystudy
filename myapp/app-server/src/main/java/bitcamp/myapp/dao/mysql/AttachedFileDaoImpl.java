@@ -29,6 +29,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
       pstmt.executeUpdate();
 
+
     } catch (Exception e) {
       throw new DaoException("데이터 입력 오류", e);
     }
@@ -57,12 +58,14 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
   public int delete(int no) {
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
-            "delete from board_files where file_no=?")) {
+            "delete from board_files where file_no=? ")) {
+
       pstmt.setInt(1, no);
+
       return pstmt.executeUpdate();
 
     } catch (Exception e) {
-      throw new DaoException("데이터 삭제 오류", e);
+      throw new DaoException("데이터 입력 오류", e);
     }
   }
 
@@ -70,12 +73,14 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
   public int deleteAll(int boardNo) {
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
-            "delete from board_files where board_no=?")) {
+            "delete from board_files where board_no=? ")) {
+
       pstmt.setInt(1, boardNo);
+
       return pstmt.executeUpdate();
 
     } catch (Exception e) {
-      throw new DaoException("데이터 삭제 오류", e);
+      throw new DaoException("데이터 입력 오류", e);
     }
   }
 
@@ -83,28 +88,27 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
   public List<AttachedFile> findAllByBoardNo(int boardNo) {
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
-            "select file_no, file_path, board_no"
-                + " from board_files where board_no=? order by file_no asc")) {
+            "select * from board_files where board_no=? order by file_no asc")) {
 
       pstmt.setInt(1, boardNo);
 
-      try (ResultSet rs = pstmt.executeQuery()) {
+      ResultSet rs = pstmt.executeQuery();
 
-        ArrayList<AttachedFile> list = new ArrayList<>();
+      List<AttachedFile> files = new ArrayList<>();
 
-        while (rs.next()) {
-          AttachedFile file = new AttachedFile();
-          file.setNo(rs.getInt("file_no"));
-          file.setFilePath(rs.getString("file_path"));
-          file.setBoardNo(rs.getInt("board_no"));
+      for (AttachedFile file : files) {
+        file.setNo(rs.getInt("file_no"));
+        file.setFilePath(rs.getString("file_path"));
+        file.setBoardNo(rs.getInt("board_no"));
 
-          list.add(file);
-        }
-        return list;
+        files.add(file);
       }
 
+      return files;
+
+
     } catch (Exception e) {
-      throw new DaoException("데이터 가져오기 오류", e);
+      throw new DaoException("데이터 입력 오류", e);
     }
   }
 }

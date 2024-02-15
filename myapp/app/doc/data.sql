@@ -29,6 +29,8 @@ insert into board_files(file_no,file_path,board_no) values
   (6,'c1.gif', 4), (7,'c2.gif', 4), (8,'c3.gif', 4), (9,'c4.gif', 4),
   (10,'d1.gif', 5);
 
+
+
 -- assignments 테이블 데이터
 insert into assignments(assignment_no,title,content,deadline)
   values(1,'과제1','내용1','2024-1-1');
