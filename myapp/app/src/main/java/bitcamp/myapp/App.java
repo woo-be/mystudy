@@ -84,7 +84,7 @@ public class App {
     // 톰캣 서버에 배포할 웹 애플리케이션의 환경 정보 준비
     StandardContext ctx = (StandardContext) tomcat.addWebapp(
         "/", // 컨텍스트 경로(웹 애플리케이션 경로)
-        new File("./src/main/webapp").getAbsolutePath() // 웹 애플리케이션 파일이 있는 실제 경로
+        new File("src/main/webapp").getAbsolutePath() // 웹 애플리케이션 파일이 있는 실제 경로
     );
     ctx.setReloadable(true);
 
@@ -110,7 +110,6 @@ public class App {
 
     System.out.println("서버 종료!");
   }
-
 
   void prepareDatabase() {
     try {

@@ -22,13 +22,19 @@ public class AssignmentDaoImpl implements AssignmentDao {
   public void add(Assignment assignment) {
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
-            "insert into assignments(title,content,deadline) values(?,?,?)")) {
+            "insert into assignments(title,content,deadline) values(?,?,?)",
+            PreparedStatement.RETURN_GENERATED_KEYS)) {
 
       pstmt.setString(1, assignment.getTitle());
       pstmt.setString(2, assignment.getContent());
       pstmt.setDate(3, assignment.getDeadline());
 
       pstmt.executeUpdate();
+
+      try (ResultSet keyRs = pstmt.getGeneratedKeys()) {
+        keyRs.next();
+        assignment.setNo(keyRs.getInt(1));
+      }
 
     } catch (Exception e) {
       throw new DaoException("데이터 입력 오류", e);
@@ -53,7 +59,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
   public List<Assignment> findAll() {
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(
-            "select assignment_no, title, deadline from assignments order by assignment_no desc");
+            "select * from assignments order by assignment_no asc");
         ResultSet rs = pstmt.executeQuery()) {
 
       ArrayList<Assignment> list = new ArrayList<>();
@@ -62,6 +68,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
         Assignment assignment = new Assignment();
         assignment.setNo(rs.getInt("assignment_no"));
         assignment.setTitle(rs.getString("title"));
+        assignment.setContent(rs.getString("content"));
         assignment.setDeadline(rs.getDate("deadline"));
 
         list.add(assignment);

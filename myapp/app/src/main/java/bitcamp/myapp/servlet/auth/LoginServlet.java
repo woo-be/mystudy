@@ -1,4 +1,4 @@
-package bitcamp.myapp.Servlet.auth;
+package bitcamp.myapp.servlet.auth;
 
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.dao.mysql.MemberDaoImpl;
@@ -31,7 +31,7 @@ public class LoginServlet extends GenericServlet {
 
     // 서블릿 컨테이너가 service()를 호출할 때 넘겨주는 값을
     // HttpServletRequest와 HttpServletResponse이다.
-    // 파라미터로 넘어온 객체를 제대로 사용하고 싶다면 원래 타입으로 형변환한다.
+    // 파라미터로 넘어 온 객체를 제대로 사용하고 싶다면 원래 타입으로 형변환하라!
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -44,8 +44,8 @@ public class LoginServlet extends GenericServlet {
     out.println("<!DOCTYPE html>");
     out.println("<html lang='en'>");
     out.println("<head>");
-    out.println("<meta charset='UTF - 8'>");
-    out.println("<title>비트캠프 데브옵스 5기</title>");
+    out.println("  <meta charset='UTF-8'>");
+    out.println("  <title>비트캠프 데브옵스 5기</title>");
     out.println("</head>");
     out.println("<body>");
     out.println("<h1>과제 관리 시스템</h1>");
@@ -66,7 +66,7 @@ public class LoginServlet extends GenericServlet {
       out.println("</pre>");
     }
 
-    out.printf("</body>");
-    out.printf("</html>");
+    out.println("</body>");
+    out.println("</html>");
   }
 }

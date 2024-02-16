@@ -79,7 +79,7 @@ public class BoardDaoImpl implements BoardDao {
                 + "group by\n"
                 + "  board_no\n"
                 + "order by\n"
-                + "  board_no desc")) {
+                + "  board_no asc")) {
 
       pstmt.setInt(1, category);
 
