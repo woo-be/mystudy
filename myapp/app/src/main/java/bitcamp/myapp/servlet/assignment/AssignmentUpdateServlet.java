@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/assignment/update")
-public class AssignmentModifyServlet extends HttpServlet {
+public class AssignmentUpdateServlet extends HttpServlet {
 
   private AssignmentDao assignmentDao;
   TransactionManager txManager;
 
-  public AssignmentModifyServlet() {
+  public AssignmentUpdateServlet() {
     DBConnectionPool connectionPool = new DBConnectionPool(
         "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
     this.txManager = new TransactionManager(connectionPool);
