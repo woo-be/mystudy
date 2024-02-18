@@ -2,8 +2,8 @@ package bitcamp.myapp.servlet.assignment;
 
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
-import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.DBConnectionPool;
+import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,14 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/assignment/view")
-public class AssignmentViewServlet extends HttpServlet {
+@WebServlet("/assignment/delete")
+public class AssignmentDeleteServlet extends HttpServlet {
 
   private AssignmentDao assignmentDao;
+  TransactionManager txManager;
 
-  public AssignmentViewServlet() {
+  public AssignmentDeleteServlet() {
     DBConnectionPool connectionPool = new DBConnectionPool(
         "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
+    this.txManager = new TransactionManager(connectionPool);
     this.assignmentDao = new AssignmentDaoImpl(connectionPool);
   }
 
@@ -40,38 +42,25 @@ public class AssignmentViewServlet extends HttpServlet {
     out.println("<h1>과제</h1>");
 
     try {
+      txManager.startTransaction();
+
       int no = Integer.parseInt(request.getParameter("no"));
-      Assignment assignment = assignmentDao.findBy(no);
-      if (assignment == null) {
+      if (assignmentDao.delete(no) == 0) {
         out.println("<p>과제 번호가 유효하지 않습니다!</p>");
-        out.println("</body>");
-        out.println("</html>");
-        return;
+      } else {
+        out.println("<script>");
+        out.println("  location.href = '/assignment/list'");
+        out.println("</script>");
       }
 
-      out.println("<form action='/assignment/update'>");
-      out.println("  <div>");
-      out.printf("    번호: <input name='no' readonly type='text' value='%s'>\n", assignment.getNo());
-      out.println("  </div>");
-      out.println("  <div>");
-      out.printf("    제목: <input name='title' type='text' value='%s'>\n", assignment.getTitle());
-      out.println("  </div>");
-      out.println("  <div>");
-      out.printf("    내용: <textarea name='content'>%s</textarea>\n", assignment.getContent());
-      out.println("  </div>");
-      out.println("  <div>");
-      out.printf("    기한: <input name='deadline' type='text' value='%s'>\n",
-          assignment.getDeadline());
-      out.println("  </div>");
-      out.println("  <div>");
-      out.println("    <button>변경</button>");
-      out.printf("    <a href='/assignment/delete?no=%d'>삭제</a>\n", assignment.getNo());
-      out.println("  </div>");
-      out.println("</form>");
-
+      txManager.commit();
 
     } catch (Exception e) {
-      out.println("<p>조회 오류!</p>");
+      try {
+        txManager.rollback();
+      } catch (Exception e2) {
+      }
+      out.println("<p>삭제 오류!</p>");
       out.println("<pre>");
       e.printStackTrace(out);
       out.println("</pre>");
@@ -80,5 +69,4 @@ public class AssignmentViewServlet extends HttpServlet {
     out.println("  </tbody>");
     out.println("</table>");
   }
-
 }
