@@ -58,6 +58,10 @@ public class AssignmentListServlet extends HttpServlet {
             assignment.getContent(),
             assignment.getDeadline());
       }
+
+      out.println("    </tbody>");
+      out.println("</table>");
+      
     } catch (Exception e) {
       out.println("<p>목록 오류!</p>");
       out.println("<pre>");

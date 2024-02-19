@@ -61,6 +61,9 @@ public class MemberListServlet extends HttpServlet {
             member.getCreatedDate());
       }
 
+      out.println("    </tbody>");
+      out.println("</table>");
+
     } catch (Exception e) {
       out.println("<p>목록 오류!</p>");
       out.println("<pre>");
