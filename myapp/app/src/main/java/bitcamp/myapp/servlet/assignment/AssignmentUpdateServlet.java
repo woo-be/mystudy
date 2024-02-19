@@ -1,10 +1,7 @@
 package bitcamp.myapp.servlet.assignment;
 
 import bitcamp.myapp.dao.AssignmentDao;
-import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
 import bitcamp.myapp.vo.Assignment;
-import bitcamp.util.DBConnectionPool;
-import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -18,13 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 public class AssignmentUpdateServlet extends HttpServlet {
 
   private AssignmentDao assignmentDao;
-  TransactionManager txManager;
 
-  public AssignmentUpdateServlet() {
-    DBConnectionPool connectionPool = new DBConnectionPool(
-        "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
-    this.txManager = new TransactionManager(connectionPool);
-    this.assignmentDao = new AssignmentDaoImpl(connectionPool);
+
+  @Override
+  public void init() {
+    assignmentDao = (AssignmentDao) this.getServletContext().getAttribute("assignmentDao");
   }
 
   @Override
@@ -50,8 +45,6 @@ public class AssignmentUpdateServlet extends HttpServlet {
         return;
       }
 
-      txManager.startTransaction();
-
       Assignment assignment = new Assignment();
       assignment.setNo(old.getNo());
       assignment.setTitle(request.getParameter("title"));
@@ -61,11 +54,9 @@ public class AssignmentUpdateServlet extends HttpServlet {
       assignmentDao.update(assignment);
       out.println("<p>과제를 변경했습니다.</p>");
 
-      txManager.commit();
 
     } catch (Exception e) {
       try {
-        txManager.rollback();
       } catch (Exception e2) {
       }
       out.println("<p>변경 오류!</p>");

@@ -1,9 +1,6 @@
 package bitcamp.myapp.servlet.assignment;
 
 import bitcamp.myapp.dao.AssignmentDao;
-import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
-import bitcamp.util.DBConnectionPool;
-import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,13 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 public class AssignmentDeleteServlet extends HttpServlet {
 
   private AssignmentDao assignmentDao;
-  TransactionManager txManager;
 
-  public AssignmentDeleteServlet() {
-    DBConnectionPool connectionPool = new DBConnectionPool(
-        "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
-    this.txManager = new TransactionManager(connectionPool);
-    this.assignmentDao = new AssignmentDaoImpl(connectionPool);
+
+  @Override
+  public void init() {
+    assignmentDao = (AssignmentDao) this.getServletContext().getAttribute("assignmentDao");
   }
 
   @Override
@@ -42,7 +37,6 @@ public class AssignmentDeleteServlet extends HttpServlet {
     out.println("<h1>과제</h1>");
 
     try {
-      txManager.startTransaction();
 
       int no = Integer.parseInt(request.getParameter("no"));
       if (assignmentDao.delete(no) == 0) {
@@ -53,11 +47,9 @@ public class AssignmentDeleteServlet extends HttpServlet {
         out.println("</script>");
       }
 
-      txManager.commit();
 
     } catch (Exception e) {
       try {
-        txManager.rollback();
       } catch (Exception e2) {
       }
       out.println("<p>삭제 오류!</p>");

@@ -3,6 +3,7 @@ package com.woo.checklist.dao.mysql;
 import com.woo.checklist.dao.DaoException;
 import com.woo.checklist.dao.ToDoDao;
 import com.woo.checklist.vo.ToDo;
+import com.woo.util.DBConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,16 +12,19 @@ import java.util.List;
 
 public class ToDoDaoImpl implements ToDoDao {
 
-  Connection con;
+  DBConnectionPool connectionPool;
 
-  public ToDoDaoImpl(Connection con) {
-    this.con = con;
+  public ToDoDaoImpl(DBConnectionPool connectionPool) {
+    this.connectionPool = connectionPool;
   }
 
   @Override
   public void add(ToDo toDo) {
-    try (PreparedStatement pstmt = con.prepareStatement(
-        "insert into todo(title,content,deadline,level) values(?,?,?,?)")) {
+
+    try (Connection con = connectionPool.getConnection();
+        PreparedStatement pstmt = con.prepareStatement(
+            "insert into todo(title,content,deadline,level) values(?,?,?,?)");
+    ) {
 
       pstmt.setString(1, toDo.getTitle());
       pstmt.setString(2, toDo.getContent());
@@ -30,21 +34,24 @@ public class ToDoDaoImpl implements ToDoDao {
       pstmt.executeUpdate();
 
     } catch (Exception e) {
-      throw new DaoException("SQL:데이터 입력 오류", e);
+      throw new DaoException("데이터 입력 오류", e);
     }
   }
 
   @Override
   public int delete(int no) {
-    try (PreparedStatement pstmt1 = con.prepareStatement("delete from todo where no=?");
-        PreparedStatement pstmt2 = con.prepareStatement("alter table todo auto_increment=1")) {
 
-      pstmt1.setInt(1, no);
+    try {
+      try (Connection con = connectionPool.getConnection();
+          PreparedStatement pstmt1 = con.prepareStatement("delete from todo where no=?");
+          PreparedStatement pstmt2 = con.prepareStatement("alter table todo auto_increment=1")) {
 
-      int a = pstmt1.executeUpdate();
-      pstmt2.executeUpdate();
-      return a;
+        pstmt1.setInt(1, no);
 
+        int a = pstmt1.executeUpdate();
+        pstmt2.executeUpdate();
+        return a;
+      }
     } catch (Exception e) {
       throw new DaoException("SQL:데이터 삭제 오류", e);
     }
@@ -52,8 +59,9 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public List<ToDo> findAll() {
-    try (PreparedStatement pstmt = con.prepareStatement(
-        "select no,title,content,deadline,p.priority from todo join priority p on todo.level = p.level");
+    try (Connection con = connectionPool.getConnection();
+        PreparedStatement pstmt = con.prepareStatement(
+            "select no,title,content,deadline,p.priority from todo join priority p on todo.level = p.level");
         ResultSet rs = pstmt.executeQuery()) {
 
       ArrayList<ToDo> list = new ArrayList<>();
@@ -77,8 +85,9 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public ToDo findBy(int no) {
-    try (PreparedStatement pstmt = con.prepareStatement(
-        "select no,title,content,deadline,todo.level,p.priority from todo join priority p on todo.level=p.level where no=?")) {
+    try (Connection con = connectionPool.getConnection();
+        PreparedStatement pstmt = con.prepareStatement(
+            "select no,title,content,deadline,todo.level,p.priority from todo join priority p on todo.level=p.level where no=?")) {
 
       pstmt.setInt(1, no);
 
@@ -104,8 +113,9 @@ public class ToDoDaoImpl implements ToDoDao {
 
   @Override
   public int update(ToDo toDo) {
-    try (PreparedStatement pstmt = con.prepareStatement(
-        "update todo set title=?, content=?, deadline=?, level=? where no=?")) {
+    try (Connection con = connectionPool.getConnection();
+        PreparedStatement pstmt = con.prepareStatement(
+            "update todo set title=?, content=?, deadline=?, level=? where no=?")) {
 
       pstmt.setString(1, toDo.getTitle());
       pstmt.setString(2, toDo.getContent());

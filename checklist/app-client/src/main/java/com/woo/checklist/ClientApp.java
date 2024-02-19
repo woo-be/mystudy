@@ -10,24 +10,23 @@ import java.net.Socket;
 
 public class ClientApp {
 
-  Prompt prompt = new Prompt(System.in);
   String serverAddress;
   int port;
 
 
   public static void main(String[] args) {
     new ClientApp().
-        setAddress("localhost").
-        setPort(8888).
+        server("localhost").
+        port(8888).
         run();
   }
 
-  ClientApp setAddress(String serverAddress) {
+  ClientApp server(String serverAddress) {
     this.serverAddress = serverAddress;
     return this;
   }
 
-  ClientApp setPort(int port) {
+  ClientApp port(int port) {
     this.port = port;
     return this;
   }
@@ -35,22 +34,24 @@ public class ClientApp {
   void run() {
     try (Socket socket = new Socket(serverAddress, port);
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        DataInputStream in = new DataInputStream(socket.getInputStream())
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        Prompt prompt = new Prompt(System.in);
     ) {
       while (true) {
-        String reply = in.readUTF();
-        if (reply.equals("[[quit!]]")) {
+        String response = in.readUTF();
+        if (response.equals("[[quit!]]")) {
           break;
         }
-        System.out.print(reply);
+        System.out.print(response);
 
-        out.writeUTF(prompt.input(""));
+        String input = prompt.input("");
+        out.writeUTF(input);
       }
 
-      System.out.println("클라이언트 종료!");
+      System.out.println("서버 연결 종료!");
 
     } catch (Exception e) {
-      System.out.println("서버 연결 오류!");
+      System.out.println("서버 통신 오류!");
       e.printStackTrace();
     }
   }

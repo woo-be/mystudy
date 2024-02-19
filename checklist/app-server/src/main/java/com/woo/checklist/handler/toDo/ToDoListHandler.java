@@ -10,14 +10,13 @@ public class ToDoListHandler extends AbstractMenuHandler {
 
   private ToDoDao toDoDao;
 
-  public ToDoListHandler(ToDoDao toDoDao, Prompt prompt) {
-    super(prompt);
+  public ToDoListHandler(ToDoDao toDoDao) {
     this.toDoDao = toDoDao;
   }
 
   @Override
-  protected void action() {
-    System.out.printf("%-2s\t%-23s\t%-8s\t%s\n", "번호", "할일", "기한", "우선순위");
+  protected void action(Prompt prompt) {
+    prompt.printf("%-2s\t%-23s\t%-8s\t%s\n", "번호", "할일", "기한", "우선순위");
 
     List<ToDo> list = toDoDao.findAll();
 
@@ -28,7 +27,7 @@ public class ToDoListHandler extends AbstractMenuHandler {
 //          String.valueOf(toDo.getNo()),
 //          toDo.getTitle(),
 //          toDo.getDeadLine());
-      System.out.printf(
+      prompt.printf(
           String.format("%-4d\t%%-" + titleSize + "s\t%s\t%s\n", toDo.getNo(), toDo.getDeadLine(),
               toDo.getPriority()),
           toDo.getTitle());

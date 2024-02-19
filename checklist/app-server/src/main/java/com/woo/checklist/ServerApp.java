@@ -11,17 +11,22 @@ import com.woo.checklist.handler.toDo.ToDoListHandler;
 import com.woo.checklist.handler.toDo.ToDoModifyHandler;
 import com.woo.checklist.handler.toDo.ToDoViewHandler;
 import com.woo.menu.MenuGroup;
+import com.woo.util.DBConnectionPool;
 import com.woo.util.Prompt;
+import com.woo.util.TransactionManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerApp {
 
-  Prompt prompt = new Prompt(System.in);
+  ExecutorService executorService = Executors.newCachedThreadPool();
+
+  TransactionManager txManager;
+  DBConnectionPool connectionPool;
 
   ToDoDao toDoDao;
 
@@ -41,11 +46,11 @@ public class ServerApp {
     mainMenu = MenuGroup.getInstance("메인");
 
     MenuGroup toDoMenu = mainMenu.addGroup("할 일 목록");
-    toDoMenu.addItem("등록", new ToDoAddHandler(toDoDao, prompt));
-    toDoMenu.addItem("조회", new ToDoViewHandler(toDoDao, prompt));
-    toDoMenu.addItem("수정", new ToDoModifyHandler(toDoDao, prompt));
-    toDoMenu.addItem("완료", new ToDoDeleteHandler(toDoDao, prompt));
-    toDoMenu.addItem("목록", new ToDoListHandler(toDoDao, prompt));
+    toDoMenu.addItem("등록", new ToDoAddHandler(txManager, toDoDao));
+    toDoMenu.addItem("조회", new ToDoViewHandler(toDoDao));
+    toDoMenu.addItem("수정", new ToDoModifyHandler(toDoDao));
+    toDoMenu.addItem("완료", new ToDoDeleteHandler(toDoDao));
+    toDoMenu.addItem("목록", new ToDoListHandler(toDoDao));
 
   }
 
@@ -55,11 +60,15 @@ public class ServerApp {
 //      Driver driver = new com.mysql.cj.jdbc.Driver();
 //      DriverManager.registerDriver(driver);
 
-      Connection con = DriverManager.getConnection(
+//      Connection con = DriverManager.getConnection(
 //          "jdbc:mysql://localhost/checklist", "study", "Bitcamp!@#123");
-          "jdbc:mysql://db-ld285-kr.vpc-pub-cdb.ntruss.com/checklist", "study", "Bitcamp!@#123");
+//          "jdbc:mysql://db-ld285-kr.vpc-pub-cdb.ntruss.com/checklist", "study", "Bitcamp!@#123");
 
-      toDoDao = new ToDoDaoImpl(con);
+      connectionPool = new DBConnectionPool(
+          "jdbc:mysql://db-ld285-kr.vpc-pub-cdb.ntruss.com/checklist", "study", "Bitcamp!@#123");
+      txManager = new TransactionManager(connectionPool);
+
+      toDoDao = new ToDoDaoImpl(connectionPool);
 
     } catch (Exception e) {
       System.out.println("통신 오류!");
@@ -69,12 +78,18 @@ public class ServerApp {
 
   void run() {
     try (ServerSocket serverSocket = new ServerSocket(8888)) {
-      Socket socket = serverSocket.accept();
-      processRequest(socket);
 
+      while (true) {
+        Socket socket = serverSocket.accept();
+        executorService.execute(() -> processRequest(socket));
+
+      }
     } catch (Exception e) {
       System.out.println("서버 소켓 오류!");
       e.printStackTrace();
+
+    } finally {
+      connectionPool.closeAll();
     }
   }
 
@@ -86,23 +101,18 @@ public class ServerApp {
       while (true) {
         try {
           mainMenu.execute(prompt);
-          prompt.close();
+          prompt.print("[[quit!]]");
+          prompt.end();
           break;
         } catch (Exception e) {
           System.out.println("예외 발생!");
+          e.printStackTrace();
         }
       }
-      out.writeUTF("[[quit!]]");
-
-      System.out.println("서버 종료됨!");
 
     } catch (Exception e) {
-      System.out.println("서버 실행 오류!");
+      System.out.println("클라이언트 통신 오류!");
       e.printStackTrace();
     }
   }
-
-//  void run() {
-
-//  }
 }

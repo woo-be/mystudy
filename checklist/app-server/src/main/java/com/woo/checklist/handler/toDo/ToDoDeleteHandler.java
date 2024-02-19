@@ -8,23 +8,22 @@ public class ToDoDeleteHandler extends AbstractMenuHandler {
 
   private ToDoDao toDoDao;
 
-  public ToDoDeleteHandler(ToDoDao toDoDao, Prompt prompt) {
-    super(prompt);
+  public ToDoDeleteHandler(ToDoDao toDoDao) {
     this.toDoDao = toDoDao;
   }
 
   @Override
-  protected void action() {
+  protected void action(Prompt prompt) {
     try {
-      int no = this.prompt.inputInt("번호? ");
+      int no = prompt.inputInt("번호? ");
       if (toDoDao.delete(no) == 0) {
-        System.out.println("할일 번호가 유효하지 않습니다!");
+        prompt.println("할일 번호가 유효하지 않습니다!");
       } else {
-        System.out.println("할일을 완료했습니다.");
+        prompt.println("할일을 완료했습니다.");
       }
 
     } catch (Exception e) {
-      System.out.println("완료를 실행하는데 오류 발생!");
+      prompt.println("완료를 실행하는데 오류 발생!");
     }
   }
 }

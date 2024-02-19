@@ -1,9 +1,7 @@
 package bitcamp.myapp.servlet.member;
 
 import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.dao.mysql.MemberDaoImpl;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.DBConnectionPool;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,11 +17,10 @@ public class MemberDeleteServlet extends HttpServlet {
   private MemberDao memberDao;
   private TransactionManager txManager;
 
-  public MemberDeleteServlet() {
-    DBConnectionPool connectionPool = new DBConnectionPool(
-        "jdbc:mysql://localhost/studydb", "study", "Bitcamp!@#123");
-    this.memberDao = new MemberDaoImpl(connectionPool);
-    this.txManager = new TransactionManager(connectionPool);
+  @Override
+  public void init() {
+    this.memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
+    this.txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
   }
 
   @Override
@@ -54,21 +51,22 @@ public class MemberDeleteServlet extends HttpServlet {
     try {
       txManager.startTransaction();
 
-      int no = Integer.parseInt(request.getParameter("no"));
+      int memberNo = Integer.parseInt(request.getParameter("no"));
 
-      Member member = memberDao.findBy(no);
+      Member member = memberDao.findBy(memberNo);
+
       if (member.getNo() != loginUser.getNo()) {
         out.println("<p>권한이 없습니다.</p>");
         return;
       }
 
-      if (memberDao.delete(no) == -1) {
-        out.println("<p>회원 번호가 유효하지 않습니다!</p>");
-      } else {
-        out.println("<p>회원을 삭제했습니다.</p>");
-      }
+      memberDao.delete(memberNo);
 
       txManager.commit();
+
+      out.println("<script>");
+      out.println("  location.href = '/member/list'");
+      out.println("</script>");
 
     } catch (Exception e) {
       try {

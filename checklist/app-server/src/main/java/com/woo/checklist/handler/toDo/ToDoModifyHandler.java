@@ -9,41 +9,40 @@ public class ToDoModifyHandler extends AbstractMenuHandler {
 
   private ToDoDao toDoDao;
 
-  public ToDoModifyHandler(ToDoDao toDoDao, Prompt prompt) {
-    super(prompt);
+  public ToDoModifyHandler(ToDoDao toDoDao) {
     this.toDoDao = toDoDao;
   }
 
   @Override
-  protected void action() {
+  protected void action(Prompt prompt) {
     try {
-      int no = this.prompt.inputInt("번호? ");
+      int no = prompt.inputInt("번호? ");
 
       ToDo old = toDoDao.findBy(no);
       if (old == null) {
-        System.out.println("할일 번호가 유효하지 않습니다!");
+        prompt.println("할일 번호가 유효하지 않습니다!");
         return;
       }
 
       ToDo toDo = new ToDo();
       toDo.setNo(old.getNo());
-      toDo.setTitle(this.prompt.input("제목(%s)? ", old.getTitle()));
-      toDo.setContent(this.prompt.input("내용(%s)? ", old.getContent()));
-      toDo.setDeadLine(this.prompt.inputDate("기한(%s)? ", old.getDeadLine()));
-      toDo.setLevel(this.prompt.inputInt("우선순위(%s)? ", old.getLevel()));
+      toDo.setTitle(prompt.input("제목(%s)? ", old.getTitle()));
+      toDo.setContent(prompt.input("내용(%s)? ", old.getContent()));
+      toDo.setDeadLine(prompt.inputDate("기한(%s)? ", old.getDeadLine()));
+      toDo.setLevel(prompt.inputInt("우선순위(%s)? ", old.getLevel()));
 
       toDoDao.update(toDo);
-      System.out.println("할일을 변경했습니다.");
+      prompt.println("할일을 변경했습니다.");
 
     } catch (NumberFormatException e) {
-      System.out.println("숫자를 입력하세요!");
+      prompt.println("숫자를 입력하세요!");
 
     } catch (IllegalArgumentException e) {
-      System.out.println("할일 변경 오류!");
-      System.out.println("다시 시도 하세요.");
+      prompt.println("할일 변경 오류!");
+      prompt.println("다시 시도 하세요.");
 
     } catch (Exception e) {
-      System.out.println("실행 오류!");
+      prompt.println("실행 오류!");
       e.printStackTrace();
     }
 
