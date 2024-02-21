@@ -11,8 +11,13 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet("/hello")
 public class HelloServlet implements Servlet {
 
+  public HelloServlet() {
+    System.out.println("객체 생성!");
+  }
+
   @Override
   public void init(ServletConfig config) throws ServletException {
+    System.out.println("객체 자원 준비!");
   }
 
   @Override
