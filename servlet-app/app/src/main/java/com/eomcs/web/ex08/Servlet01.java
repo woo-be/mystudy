@@ -33,6 +33,8 @@ public class Servlet01 extends HttpServlet {
     response.setContentType("text/plain;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
+    response.setHeader("Refresh", "3;url=s100");
+
     out.println("안녕하세요! - /ex08/s1");
 
     // 응답 헤더에 Refresh 정보를 추가한다.
@@ -55,7 +57,7 @@ public class Servlet01 extends HttpServlet {
 
     // 다음은 일부러 버퍼를 채우는 코드이다.
     // 버퍼가 꽉차면 자동으로 출력하는 것을 확인해보자!
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 200; i++) {
       // 약 40 바이트씩 100번 출력하면 아직 버퍼에 차지 않았기 때문에
       // 클라이언트로 출력되지 않는다.
       // 따라서 반복문 아래에 있는 응답 헤더 설정이 유효하다.
@@ -67,8 +69,6 @@ public class Servlet01 extends HttpServlet {
       //
       out.println(i + " ===> 1234567890123456789012345678901234567890");
     }
-
-    response.setHeader("Refresh", "3;url=s100");
 
     // 이 service() 메서드의 호출이 끝나면
     // 비로서 응답 프로토콜에 맞춰

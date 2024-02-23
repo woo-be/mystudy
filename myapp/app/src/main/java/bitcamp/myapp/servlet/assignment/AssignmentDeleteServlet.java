@@ -21,7 +21,7 @@ public class AssignmentDeleteServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     response.setContentType("text/html;charset=UTF-8");
@@ -41,6 +41,7 @@ public class AssignmentDeleteServlet extends HttpServlet {
       int no = Integer.parseInt(request.getParameter("no"));
       if (assignmentDao.delete(no) == 0) {
         out.println("<p>과제 번호가 유효하지 않습니다!</p>");
+        response.setHeader("Refresh", "1;url=/assignment/list");
       } else {
         out.println("<script>");
         out.println("  location.href = '/assignment/list'");

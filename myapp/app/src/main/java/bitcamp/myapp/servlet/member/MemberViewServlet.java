@@ -21,7 +21,7 @@ public class MemberViewServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     response.setContentType("text/html;charset=UTF-8");
@@ -44,12 +44,13 @@ public class MemberViewServlet extends HttpServlet {
       Member member = memberDao.findBy(no);
       if (member == null) {
         out.println("<p>회원 번호가 유효하지 않습니다!</p>");
+        response.setHeader("Refresh", "1;url=/member/list");
         out.println("</body>");
         out.println("</html>");
         return;
       }
 
-      out.println("<form action='/member/update'>");
+      out.println("<form action='/member/update' method='post'>");
       out.println("  <div>");
       out.printf("    번호: <input name='no' readonly type='text' value='%s'>\n", member.getNo());
       out.println("  </div>");
