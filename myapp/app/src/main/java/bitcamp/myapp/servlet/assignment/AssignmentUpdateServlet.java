@@ -3,7 +3,6 @@ package bitcamp.myapp.servlet.assignment;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +15,6 @@ public class AssignmentUpdateServlet extends HttpServlet {
 
   private AssignmentDao assignmentDao;
 
-
   @Override
   public void init() {
     assignmentDao = (AssignmentDao) this.getServletContext().getAttribute("assignmentDao");
@@ -26,24 +24,12 @@ public class AssignmentUpdateServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setContentType("text/html;charset=UTF-8");
-    request.setCharacterEncoding("UTF-8");
-    PrintWriter out = response.getWriter();
-
-    out.println("<!DOCTYPE html>");
-    out.println("<html lang='en'>");
-    out.println("<head>");
-    out.println("  <meta charset='UTF-8'>");
-    out.println("  <title>비트캠프 데브옵스 5기</title>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("<h1>과제</h1>");
-
     try {
-      Assignment old = assignmentDao.findBy(Integer.parseInt(request.getParameter("no")));
+      int no = Integer.parseInt(request.getParameter("no"));
+
+      Assignment old = assignmentDao.findBy(no);
       if (old == null) {
-        out.println("<p>과제 번호가 유효하지 않습니다!</p>");
-        return;
+        throw new Exception("과제 번호가 유효하지 않습니다.");
       }
 
       Assignment assignment = new Assignment();
@@ -53,21 +39,12 @@ public class AssignmentUpdateServlet extends HttpServlet {
       assignment.setDeadline(Date.valueOf(request.getParameter("deadline")));
 
       assignmentDao.update(assignment);
-
-      response.sendRedirect("/assignment/list");
-
+      response.sendRedirect("list");
 
     } catch (Exception e) {
-      try {
-      } catch (Exception e2) {
-      }
-      out.println("<p>변경 오류!</p>");
-      out.println("<pre>");
-      e.printStackTrace(out);
-      out.println("</pre>");
+      request.setAttribute("message", "변경 오류!");
+      request.setAttribute("exception", e);
+      request.getRequestDispatcher("/error").forward(request, response);
     }
-
-    out.println("  </tbody>");
-    out.println("</table>");
   }
 }
