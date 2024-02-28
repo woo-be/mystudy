@@ -25,11 +25,11 @@ public class BoardDeleteServlet extends HttpServlet {
 
   @Override
   public void init() {
+    this.txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
     this.boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
     this.attachedFileDao = (AttachedFileDao) this.getServletContext()
         .getAttribute("attachedFileDao");
-    uploadDir = this.getServletContext().getRealPath("/upload/board");
-    this.txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
+    this.uploadDir = this.getServletContext().getRealPath("/upload/board");
   }
 
   @Override
@@ -75,7 +75,7 @@ public class BoardDeleteServlet extends HttpServlet {
       }
       request.setAttribute("message", String.format("%s 삭제 오류!", title));
       request.setAttribute("exception", e);
-      request.getRequestDispatcher("/error").forward(request, response);
+      request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
   }
 }
