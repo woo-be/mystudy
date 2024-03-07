@@ -6,7 +6,9 @@ import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import javax.servlet.http.Part;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MemberController {
 
   private MemberDao memberDao;
@@ -17,7 +19,7 @@ public class MemberController {
   }
 
   @RequestMapping("/member/form")
-  public String add() throws Exception {
+  public String form() throws Exception {
     return "/member/form.jsp";
   }
 

@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BoardDaoImpl implements BoardDao {
 
   DBConnectionPool connectionPool;
@@ -77,7 +79,7 @@ public class BoardDaoImpl implements BoardDao {
                 + "group by\n"
                 + "  board_no\n"
                 + "order by\n"
-                + "  board_no asc")) {
+                + "  board_no desc")) {
 
       pstmt.setInt(1, category);
 

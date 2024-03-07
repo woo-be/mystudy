@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.UUID;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BoardController {
 
   private TransactionManager txManager;
@@ -21,8 +23,11 @@ public class BoardController {
   private AttachedFileDao attachedFileDao;
   private String uploadDir = System.getProperty("board.upload.dir");
 
-  public BoardController(TransactionManager txManager, BoardDao boardDao,
+  public BoardController(
+      TransactionManager txManager,
+      BoardDao boardDao,
       AttachedFileDao attachedFileDao) {
+
     this.txManager = txManager;
     this.boardDao = boardDao;
     this.attachedFileDao = attachedFileDao;

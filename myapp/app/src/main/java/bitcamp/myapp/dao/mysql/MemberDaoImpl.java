@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MemberDaoImpl implements MemberDao {
 
   DBConnectionPool connectionPool;
@@ -106,17 +108,20 @@ public class MemberDaoImpl implements MemberDao {
     } else {
       sql = "update members set email=?, name=?, photo=?, password=sha2(?,256) where member_no=?";
     }
+
     try (Connection con = connectionPool.getConnection();
         PreparedStatement pstmt = con.prepareStatement(sql)) {
       pstmt.setString(1, member.getEmail());
       pstmt.setString(2, member.getName());
       pstmt.setString(3, member.getPhoto());
+
       if (member.getPassword().length() == 0) {
         pstmt.setInt(4, member.getNo());
       } else {
         pstmt.setString(4, member.getPassword());
         pstmt.setInt(5, member.getNo());
       }
+
       return pstmt.executeUpdate();
 
     } catch (Exception e) {
