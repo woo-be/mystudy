@@ -41,9 +41,11 @@ public class Main {
     // bw.close();
   }
 
+  // board[i][j] 기준 가장 적게 칠하는 사각형의 개수를 리턴하는 메서드
   static int cal(char[][] board, int i, int j) {
-    int temp1 = 0;
 
+    // 첫번째 사각형이 흰색일 때
+    int temp1 = 0;
     char comp = 'W';
     for (int x = i; x < i + 8; x++) {
       for (int y = j; y < j + 8; y++) {
@@ -63,8 +65,8 @@ public class Main {
       }
     }
 
+    // 첫번째 사각형이 검정색일 때
     int temp2 = 0;
-
     comp = 'B';
     for (int x = i; x < i + 8; x++) {
       for (int y = j; y < j + 8; y++) {
