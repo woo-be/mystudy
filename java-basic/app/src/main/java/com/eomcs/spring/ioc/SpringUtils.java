@@ -10,10 +10,10 @@ public class SpringUtils {
     // 자바 객체 생성 규칙에 따라 만든 인스턴스를 부르는 말이었다.
     // 그러나 일반적으로 객체를 부를 때도 '빈'이라는 용어를 사용한다.
     System.out.println("--------------------------------");
-    int count = iocContainer.getBeanDefinitionCount();
+    int count = iocContainer.getBeanDefinitionCount(); // 생성된 인스턴스 개수 리턴
     System.out.printf("빈 개수: %d\n", count);
 
-    String[] beanNames = iocContainer.getBeanDefinitionNames();
+    String[] beanNames = iocContainer.getBeanDefinitionNames(); // 이름 목록 리턴
     for (String name : beanNames) {
       System.out.printf("%s = %s\n",
           name, iocContainer.getBean(name).getClass().getName());
