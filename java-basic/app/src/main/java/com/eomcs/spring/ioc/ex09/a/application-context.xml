@@ -11,6 +11,11 @@
     <!-- 애노테이션을 처리할 도우미 객체를 등록한다. -->
     <context:annotation-config/>
     
+    <!--  위 태그는 애노테이션을 처리할 객체를 생성한다. -->
+    <!--  <bean org.springframework.context.annotation.internalConfigurationAnnotationProcessor>
+          
+     -->
+    
     <!-- 객체를 생성하기 위해 bean 태그를 사용하지 않고도
          객체를 자동 생성할 수 있다.
          방법은?
