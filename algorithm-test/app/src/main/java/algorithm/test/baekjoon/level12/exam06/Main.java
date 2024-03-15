@@ -12,11 +12,16 @@ public class Main {
     // BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
     int n = Integer.parseInt(br.readLine());
-    int cnt = 0;
+    int cnt = -1;
     int weightSum = 0;
 
-    while (weightSum != n) {
-
+    loop: for (int i = 0; i <= 1667; i++) {
+      for (int j = 0; j <= 1000; j++) {
+        if (i * 3 + j * 5 == n) {
+          cnt = i + j;
+          break loop;
+        }
+      }
     }
 
     System.out.println(cnt);
@@ -26,12 +31,3 @@ public class Main {
     // bw.close();
   }
 }
-
-// 3 4 5 6 7 8 9 10 11 12 13 14 15
-// 5 3 4 0 1 2 3 4 0 1 2 3 4 0
-// 3 0 1 2 0 1 2 0 1 2 0 1 2 0
-//
-//
-//
-//
-//
