@@ -17,6 +17,7 @@ public class Main2 {
     for (int i = 0; i < n; i++) {
       int input = Integer.parseInt(br.readLine());
       int minIndex = 0, maxIndex = count;
+      System.out.println("1: minIndex = " + minIndex + ", maxIndex = " + maxIndex);
       int compIndex = maxIndex / 2;
       while (true) {
         if (input < arr[compIndex]) {
@@ -25,29 +26,36 @@ public class Main2 {
           minIndex = compIndex;
         }
         compIndex = (minIndex + maxIndex) / 2;
-        System.out.println("minIndex = " + minIndex + ", maxIndex = " + maxIndex);
+        System.out.println("2: minIndex = " + minIndex + ", maxIndex = " + maxIndex);
         System.out.println("compIndex = " + compIndex);
         if (compIndex == minIndex || compIndex == maxIndex) {
-          System.out.println("!!!!!!!!!!!");
+          System.out.println("input = " + input);
+          System.out.println("******값대입******");
           int countTemp = count;
           while (true) {
-            if (countTemp == compIndex)
+            if (countTemp == compIndex) {
               break;
-            arr[countTemp + 1] = arr[countTemp];
+            }
+            arr[countTemp] = arr[countTemp - 1];
             countTemp--;
+            System.out.println("배열밀기!");
           }
-          arr[compIndex + 1] = input;
+          arr[compIndex] = input;
+          count++;
           break;
         }
       }
-      count++;
       System.out.println("배열상태:");
       for (int k = 0; k < n + 1; k++) {
         System.out.println("arr[" + k + "] = " + arr[k]);
       }
+      System.out.println("count = " + count);
+      System.out.println("---------------" + (i + 1) + "번째 for문 실행됨!---------------------");
     }
 
-    for (int i = 1; i < n + 1; i++) {
+    System.out.println("--------결과----------");
+
+    for (int i = 0; i < n + 1; i++) {
       System.out.println(arr[i]);
     }
 

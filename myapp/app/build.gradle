@@ -10,7 +10,7 @@ dependencies {
     // MySQL JDBC Driver
     implementation 'com.mysql:mysql-connector-j:8.3.0'
 
-    // JSON 라이브러리
+    // JSON 구글 라이브러리
     //implementation 'com.google.code.gson:gson:2.10.1'
 
     // 임베디드 Tomcat 서버
@@ -24,6 +24,15 @@ dependencies {
 
     // Spring WebMVC 라이브러리
     implementation 'org.springframework:spring-webmvc:5.3.32'
+
+    // log4j 2.x 라이브러리
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+
+    // JSON Jackson 라이브러리
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+    // Mybatis 라이브러리
+    implementation 'org.mybatis:mybatis:3.5.15'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

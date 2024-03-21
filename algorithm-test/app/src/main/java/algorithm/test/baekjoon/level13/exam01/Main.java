@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     // BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -28,8 +27,9 @@ public class Main {
         if (compIndex == minIndex || compIndex == maxIndex) {
           int countTemp = count;
           while (true) {
-            if (countTemp == compIndex)
+            if (countTemp == compIndex) {
               break;
+            }
             arr[countTemp + 1] = arr[countTemp];
             countTemp--;
           }
