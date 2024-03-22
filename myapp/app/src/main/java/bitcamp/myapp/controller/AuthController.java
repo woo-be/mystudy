@@ -53,7 +53,8 @@ public class AuthController {
     if (member != null) {
       session.setAttribute("loginUser", member);
     }
-    return "/auth/login";
+
+    return "auth/login";
   }
 
   @GetMapping("logout")
