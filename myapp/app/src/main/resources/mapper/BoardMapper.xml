@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="BoardDao">
+<mapper namespace="bitcamp.myapp.dao.BoardDao">
 
   <resultMap id="BoardMap" type="Board">
     <id column="board_no" property="no"/>
@@ -46,7 +46,7 @@
       m.member_no,
       m.name
     from
-      boards b left outer join board_files bf on b.board_no=bf.board_no  
+      boards b left outer join board_files bf on b.board_no=bf.board_no
       inner join members m on b.writer=m.member_no  
     where
       b.category=#{value}
