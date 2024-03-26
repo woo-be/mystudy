@@ -25,6 +25,7 @@ public class AssignmentController {
 
   @PostMapping("add")
   public String add(Assignment assignment) throws Exception {
+    System.out.println(assignment);
     assignmentService.add(assignment);
     return "redirect:list";
   }
@@ -37,7 +38,6 @@ public class AssignmentController {
   @GetMapping("view")
   public void view(int no, Model model) throws Exception {
     Assignment assignment = assignmentService.get(no);
-
     if (assignment == null) {
       throw new Exception("과제 번호가 유효하지 않습니다.");
     }

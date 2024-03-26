@@ -11,7 +11,7 @@ public interface AssignmentService {
 
   Assignment get(int no);
 
-  void update(Assignment assignment);
+  int update(Assignment assignment);
 
   int delete(int no);
 }
