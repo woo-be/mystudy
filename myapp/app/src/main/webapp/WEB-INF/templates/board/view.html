@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>비트캠프 데브옵스 5기</title>
+</head>
+<body>
+
+<div data-th-replace="header :: header">머리말</div>
+
+<h1 data-th-text="${boardName}">게시판</h1>
+<form action='/app/board/update' enctype='multipart/form-data' method='post'>
+  <input data-th-value='${category}' name='category' type='hidden' value="${category}">
+  <div>
+    번호: <input data-th-value='${board.no}' name='no' readonly type='text' value="1">
+  </div>
+  <div>
+    제목: <input data-th-value='${board.title}' name='title' type='text' value="제목임">
+  </div>
+  <div>
+    내용: <textarea data-th-text="${board.content}" name='content'>내용임</textarea>
+  </div>
+  <div>
+    작성자: <input data-th-value='${board.writer.name}' readonly type='text' value="작성자임">
+  </div>
+
+  <div data-th-if="${#strings.equals(category, 1)}">
+    첨부파일: <input multiple name='attachedFiles' type='file'>
+    <ul data-th-if="${not #strings.isEmpty(board.files[0].filePath)}">
+      <li data-th-each="file : ${board.files}">
+        <a data-th-href="@{'/upload/board/' + ${file.filePath}}"
+           data-th-text="${file.filePath}" href="file.html">파일.txt</a>
+        [<a data-th-href='@{/app/board/file/delete(category=${category},no=${file.no})}'
+            href="file_delete.html">삭제</a>]
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <button>변경</button>
+    <a data-th-href='@{/app/board/delete(category=${category},no=${board.no})}' href="list.html">[삭제]</a>
+  </div>
+</form>
+
+<div data-th-replace="footer :: footer">꼬리말</div>
+
+</body>
+</html>

@@ -45,7 +45,7 @@ public class AppConfig {
   public ThymeleafViewResolver thymeleafViewResolver(ISpringTemplateEngine springTemplateEngine) {
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
     viewResolver.setTemplateEngine(springTemplateEngine);
-    viewResolver.setViewNames(new String[]{"*.html", "*.xhtml"});
+    viewResolver.setViewNames(new String[]{"*.html", "*.xhtml", "*"});
     viewResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
     viewResolver.setOrder(2);
     return viewResolver;
@@ -75,6 +75,7 @@ public class AppConfig {
     //    개발하는 동안에 필요한 설정한다.
     ///   개발을 완료하면 캐시를 사용하는 것이 성능에 좋다.
     templateResolver.setCacheable(false);
+
     return templateResolver;
   }
 
@@ -85,5 +86,4 @@ public class AppConfig {
     templateEngine.setEnableSpringELCompiler(true);
     return templateEngine;
   }
-
 }
