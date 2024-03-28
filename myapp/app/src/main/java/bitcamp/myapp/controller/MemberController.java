@@ -3,8 +3,6 @@ package bitcamp.myapp.controller;
 import bitcamp.myapp.service.MemberService;
 import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.vo.Member;
-import java.io.File;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,8 +33,8 @@ public class MemberController implements InitializingBean {
   public void afterPropertiesSet() throws Exception {
     this.uploadDir = "member/";
 
-    log.debug(String.format("uploadDir: %s\n", this.uploadDir));
-    log.debug(String.format("bucketname: %s\n", this.bucketName));
+    log.debug(String.format("uploadDir: %s", this.uploadDir));
+    log.debug(String.format("bucketname: %s", this.bucketName));
   }
 
   @GetMapping("form")
@@ -77,10 +75,9 @@ public class MemberController implements InitializingBean {
     member.setCreatedDate(old.getCreatedDate());
 
     if (file.getSize() > 0) {
-      String filename = UUID.randomUUID().toString();
+      String filename = storageService.upload(this.bucketName, this.uploadDir, file);
       member.setPhoto(filename);
-      file.transferTo(new File(this.uploadDir + "/" + filename));
-      new File(this.uploadDir + "/" + old.getPhoto()).delete();
+      storageService.delete(this.bucketName, this.uploadDir, old.getPhoto());
     } else {
       member.setPhoto(old.getPhoto());
     }
@@ -100,7 +97,7 @@ public class MemberController implements InitializingBean {
 
     String filename = member.getPhoto();
     if (filename != null) {
-      new File(this.uploadDir + "/" + filename).delete();
+      storageService.delete(this.bucketName, this.uploadDir, member.getPhoto());
     }
     return "redirect:list";
   }
