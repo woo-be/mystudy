@@ -25,7 +25,7 @@
   <tr data-th-each="board : ${list}" data-th-object="${board}">
     <td data-th-text="*{no}">1</td>
     <td>
-      <a data-th-href='@{/app/board/view(category=${category},no=*{no})}'
+      <a data-th-href='@{/board/view(category=${category},no=*{no})}'
          data-th-text="*{title}" href="view.html">제목1
       </a>
     </td>
@@ -36,6 +36,21 @@
 
   </tbody>
 </table>
+
+<p>
+  [
+  <a data-th-if="${pageNo <= 1}">이전</a>
+  <a data-th-if="${pageNo > 1}"
+     data-th-href="@{list(category=${category},pageNo=${pageNo - 1},pageSize=${pageSize})}"
+     href="list">이전</a>
+  ]
+  [
+  <a data-th-if="${pageNo >= numOfPage}">다음</a>
+  <a data-th-if="${pageNo < numOfPage}"
+     data-th-href="@{list(category=${category},pageNo=${pageNo + 1},pageSize=${pageSize})}"
+     href="list">다음</a>
+  ]
+</p>
 
 <div data-th-replace="footer :: footer">꼬리말</div>
 
