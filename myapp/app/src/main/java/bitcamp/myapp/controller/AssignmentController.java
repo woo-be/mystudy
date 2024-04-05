@@ -26,6 +26,7 @@ public class AssignmentController {
 
   @PostMapping("add")
   public String add(Assignment assignment) throws Exception {
+    System.out.println(assignment);
     assignmentService.add(assignment);
     return "redirect:list";
   }
@@ -33,7 +34,7 @@ public class AssignmentController {
   @GetMapping("list")
   public void list(
       @RequestParam(defaultValue = "1") int pageNo,
-      @RequestParam(defaultValue = "3 ") int pageSize,
+      @RequestParam(defaultValue = "3") int pageSize,
       Model model) throws Exception {
 
     if (pageSize < 3 || pageSize > 20) {

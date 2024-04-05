@@ -31,6 +31,8 @@
       created_date
     from
       members
+    order by
+      name
     limit #{rowCount} offset #{offset}
   </select>
 
@@ -72,8 +74,7 @@
       and password=sha2(#{password},256)
   </select>
 
-  <select id="countAll" parameterType="int" resultType="int">
-    select count(*) from members
+  <select id="countAll" resultType="int">
+    select count(*) from members;
   </select>
-
 </mapper>
