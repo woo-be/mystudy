@@ -6,10 +6,12 @@ import java.util.Scanner;
 public class Main {
   public static void main(String[] args) {
 
-    Object obj = new Scanner("");
+    String str = null;
 
-    System.out.println(obj);
-    System.out.println(obj.getClass());
+    String[] strs = str.split(",");
 
+    for (String s : strs) {
+      System.out.println(s);
+    }
   }
 }
