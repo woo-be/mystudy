@@ -14,7 +14,7 @@ const promise = new Promise((resolve, reject) => {
     if (xhr.readyState == 4) {
       console.log(xhr.responseText);
     }
-  };
+  };  
   xhr.open("GET", "http://localhost:3000/hello", true); 
   xhr.send();
 });
